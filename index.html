@@ -920,6 +920,18 @@ body.vrec .vxsheet.gem .vxmic{background:#e0362c;transform:scale(1.15)}
 .updbar{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:60;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:99px;padding:8px 14px;font-size:.82rem;font-weight:700;box-shadow:0 8px 22px rgba(0,0,0,.18);white-space:nowrap}
 .updbar.ok{background:var(--ok);color:#fff;border-color:transparent}
 .linkbtn{border:0;background:none;color:var(--accent);font:inherit;text-decoration:underline;padding:0;cursor:pointer}
+.pclist{display:grid;gap:4px}
+.pcrow{display:flex;align-items:center;gap:8px;width:100%;border:0;background:transparent;padding:9px 8px;border-radius:12px;font:inherit;font-size:.86rem;color:var(--ink);text-align:start;cursor:pointer}
+.pcrow:hover{background:var(--sunk)} .pcrow .pcn{flex:1;min-width:0;font-weight:600} .pcrow .pcv{color:var(--muted);white-space:nowrap} .pcrow .pcv b{color:var(--ink)}
+.pcrow.hi{background:var(--debt-soft)} .pcrow.hi .pcv b{color:var(--debt)} .pcrow.lo{background:var(--warn-soft)} .pcrow.lo .pcv b{color:var(--warn)}
+.pced{color:var(--accent);display:grid;place-items:center} .pced svg{width:18px;height:18px}
+.pcnote{background:var(--debt-soft);color:var(--debt);border-radius:10px;padding:7px 10px;font-weight:700;font-size:.8rem}
+.pcbad{font-weight:700} .pcbad.hi{color:var(--debt)} .pcbad.lo{color:var(--warn)}
+.pcsh{max-height:calc(100dvh - 32px);overflow-y:auto}
+.pccur{background:var(--sunk);border-radius:12px;padding:9px 12px;font-size:.88rem} .pccur.hi{background:var(--debt-soft);color:var(--debt)} .pccur.lo{background:var(--warn-soft);color:var(--warn)}
+.pcbig{font-size:1.05rem;color:var(--accent)} .pcwarn{border-radius:10px;padding:7px 10px;font-weight:700;font-size:.82rem} .pcwarn.hi{background:var(--debt-soft);color:var(--debt)} .pcwarn.lo{background:var(--warn-soft);color:var(--warn)}
+.pcok{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:7px 10px;font-weight:700;font-size:.82rem}
+.pcsum{display:grid;gap:6px;border-top:1px dashed var(--line);padding-top:8px;font-size:.84rem} .pcsum b{text-align:end}
 </style>
 </head>
 <body>
@@ -974,7 +986,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=83; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=84; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -2449,11 +2461,11 @@ function stockHTML(){
     <div class="meta">${e.sheet?`<span>≈ <bdi dir="ltr">${dec2(Math.max(0,e.bal)/e.sheet)}</bdi> ${tr('لوح','plaques')} (<bdi dir="ltr">${num(e.last.sw)}×${num(e.last.sh)}</bdi>)</span>`:''}
     ${mmOf(id)>0?`<span>${tr('الوزن','Poids')} ≈ ${KG(kgOf(Math.max(0,e.bal),mmOf(id)))} · <bdi dir="ltr">${mmOf(id)}</bdi> ${tr('ملم','mm')}</span>`:''}
     <span>${tr('المَبيع هذا الشهر','Vendu ce mois')}: ${M2(e.monthOut)}</span>
-    ${e.last&&!isStaff()?`<span>${tr('آخر شراء','Dernier achat')}: ${DA(e.last.costM2)}/${tr('م²','m²')}</span>`:''}</div></div>`}).join('')}</div>
+    ${e.last&&!isStaff()?(f=>`<span class="${f?'pcbad '+f:''}">${tr('آخر شراء','Dernier achat')}: ${pcDot(f)}${DA(e.last.costM2)}/${tr('م²','m²')}</span>`)(pcFlag('g:'+id,e.last.costM2)):''}</div></div>`}).join('')}</div>
   <p class="note">${tr('كل فاتورة بيع تُخصم مساحتها من المخزون تلقائياً. سجّل الكسر وبقايا القص في «تعديل الجرد».','Chaque vente déduit sa surface du stock. Notez la casse et les chutes dans « Ajuster l’inventaire ».')}</p>
   ${isStaff()?'':`<h3>${tr('حركة السلعة','Mouvements de stock')}</h3>`}
   ${mv.length?`<div class="led">${mv.map(([id,m])=>m.kind==='in'
-    ?`<div class="le"><span class="what">${tr('دخول','Entrée')} ${esc(m.type)} · <bdi dir="ltr">${num(m.sheets)}</bdi> ${tr('لوح','plaques')} <bdi dir="ltr">${num(m.sw)}×${num(m.sh)}</bdi></span><span class="a" style="color:var(--ok)">+${M2(m.area)}</span><span class="d">${fdate(m.date)} · ${DA(m.costM2)}/${tr('م²','m²')} · ${tr('المجموع','Total')} ${DA(m.cost)}${m.supplier?' · '+esc(m.supplier):''}</span><button class="btn danger del" data-act="del-mv" data-id="${id}">${tr('حذف','Supprimer')}</button></div>`
+    ?`<div class="le"><span class="what">${tr('دخول','Entrée')} ${esc(m.type)} · <bdi dir="ltr">${num(m.sheets)}</bdi> ${tr('لوح','plaques')} <bdi dir="ltr">${num(m.sw)}×${num(m.sh)}</bdi></span><span class="a" style="color:var(--ok)">+${M2(m.area)}</span><span class="d">${fdate(m.date)} · ${pcMvPrice(m)} · ${tr('المجموع','Total')} ${DA(m.cost)}${m.supplier?' · '+esc(m.supplier):''}</span><span class="le-acts"><button class="btn ghost" data-act="pc-edit" data-mid="${id}">✏️ ${tr('السعر','Prix')}</button><button class="btn danger" data-act="del-mv" data-id="${id}">${tr('حذف','Supprimer')}</button></span></div>`
     :`<div class="le"><span class="what">${tr('تعديل جرد','Ajustement')} ${esc(m.type)}</span><span class="a" style="color:var(--warn)">${num(m.area)>0?'+':'−'}${M2(Math.abs(num(m.area)))}</span><span class="d">${fdate(m.date)}${m.note?' · '+esc(m.note):''}</span><button class="btn danger del" data-act="del-mv" data-id="${id}">${tr('حذف','Supprimer')}</button></div>`).join('')}</div>`
     :isStaff()?'':`<div class="empty"><p>${tr('لم تُدخل أي سلعة بعد. ابدأ بالسلعة الموجودة حالياً في المحل.','Aucune entrée. Commencez par le stock présent au magasin.')}</p></div>`}
   </div>`;
@@ -5737,7 +5749,7 @@ let supPur={};
 {const _sup=supHTML;supHTML=function(){const id=view.id,x=S.sups[id];if(!x)return _sup();const st=S.sstats[id]||{bal:0,buy:0,paid:0};
   const e=[],G={},pr={};supPur={};
   if(num(x.opening))e.push({k:'open',date:(x.createdAt?dstr(new Date(x.createdAt)):''),t:x.createdAt||0,amt:num(x.opening),label:tr('دين قديم','Ancien solde')});
-  const add=(col,mid,m,name,det,key,price,unit)=>{if(!pr[key]||m.date>pr[key].date||(m.date===pr[key].date&&(m.createdAt||0)>pr[key].t))pr[key]={name,price,unit,date:m.date,t:m.createdAt||0};
+  const add=(col,mid,m,name,det,key,price,unit)=>{if(!pr[key]||m.date>pr[key].date||(m.date===pr[key].date&&(m.createdAt||0)>pr[key].t))pr[key]={key,name,price,unit,date:m.date,t:m.createdAt||0};
     const gk=m.pid||('x'+mid);const g=G[gk]||(G[gk]={pid:m.pid||'',date:m.date,t:m.createdAt||0,ref:m.pref||'',items:[],amt:0,paid:0,docs:[]});g.items.push({name,det,a:num(m.cost)});g.amt+=num(m.cost);g.paid+=num(m.paid);g.docs.push(col+'/'+mid);if((m.createdAt||0)<g.t)g.t=m.createdAt||0};
   for(const [mid,m] of Object.entries(S.stock))if(m.kind==='in'&&m.supplierId===id)add('stock',mid,m,m.type,`<bdi dir="ltr">${num(m.sheets)}</bdi> ${tr('لوح','plaques')} · <bdi dir="ltr">${num(m.sw)}×${num(m.sh)}</bdi> · ${grp(m.costM2)}/${tr('م²','m²')}`,'g:'+m.typeId,num(m.costM2),tr('م²','m²'));
   for(const [mid,m] of Object.entries(S.amv))if(m.kind==='in'&&m.supplierId===id){const u=unitTr((S.arts[m.articleId]||{}).unit);add('amoves',mid,m,m.name||'',`${dec2s(m.qty)} ${esc(u)} × ${grp(m.unitCost)}`,'a:'+m.articleId,num(m.unitCost),u)}
@@ -5754,7 +5766,7 @@ let supPur={};
   <div class="balbox"><div><div class="note">${tr('المتبقي علينا','Reste à payer')}</div><div class="amt ${st.bal>0?'neg':'pos'}" style="font-size:1.6rem">${DA(st.bal)}</div></div><div class="rside"><span class="note">${tr('المشتريات','Achats')} ${DA(st.buy)} · ${tr('دفعنا','Payé')} ${DA(st.paid)}</span></div></div>
   <div class="actions"><button class="btn" data-act="new-in" data-sup="${id}">🧾 ${tr('فاتورة شراء','Facture d’achat')}</button><button class="btn ghost" data-act="new-spay" data-id="${id}">${ic('cash')}${tr('دفع للمورّد','Payer')}</button></div>
   <div class="rowflex"><button class="btn plain" data-act="edit-sup" data-id="${id}">${ic('edit')}${tr('تعديل','Modifier')}</button></div>
-  ${P.length&&!isStaff()?`<div class="card pad stack" style="gap:6px"><b>💰 ${tr('أسعار هذا المورّد','Prix de ce fournisseur')}</b>${P.map(p=>`<div class="rowflex between note" style="color:var(--ink)"><span>${esc(p.name)}</span><span>${grp(p.price)} / ${esc(p.unit)} · ${fdate(p.date)}</span></div>`).join('')}</div>`:''}
+  ${P.length&&!isStaff()?`<div class="card pad stack" style="gap:6px"><b>💰 ${tr('أسعار هذا المورّد','Prix de ce fournisseur')}</b><div class="pclist">${P.map(p=>pcRowHTML(p,id)).join('')}</div>${pcListNote(P)}</div>`:''}
   <h3>${tr('الحساب','Compte')}</h3>
   ${e.length?`<div class="led">${e.map(row).join('')}</div>`:`<div class="empty"><p>${tr('لا توجد حركات بعد.','Aucun mouvement.')}</p></div>`}</div>`}}
 document.addEventListener('click',async e=>{const b=e.target.closest('[data-act="del-pur"]');if(!b||isStaff())return;e.stopPropagation();const docs=supPur[b.dataset.id];if(!docs||!docs.length)return;
@@ -6167,7 +6179,7 @@ function iconize(root){if(!root||prefs.icons===false)return;try{for(const el of 
 {let q=false;const mo=new MutationObserver(()=>{if(q)return;q=true;requestAnimationFrame(()=>{q=false;iconize(document.body)})});mo.observe(document.body,{childList:true,subtree:true});iconize(document.body)}
 /* انتقال الصفحات + أرقام تعدّ */
 {const _go=go;go=function(n,a){const r=_go(n,a);try{const m=$('#main');m.classList.remove('pg-in');void m.offsetWidth;m.classList.add('pg-in');countUp(m)}catch(_){}return r}}
-function countUp(root){if(prefs.anim===false)return;try{const el=root.querySelector('.hero .big bdi, .balbox .amt bdi, .kpi .v bdi, .cres b bdi');if(!el)return;const txt=el.textContent,n=parseFloat(txt.replace(/[^\d.]/g,''));if(!(n>0)||el.dataset.cu)return;el.dataset.cu=1;const t0=performance.now(),D=650,fmt=v=>grp(v);const step=t=>{const p=Math.min(1,(t-t0)/D),e=1-Math.pow(1-p,3);el.textContent=fmt(Math.round(n*e));if(p<1)requestAnimationFrame(step);else el.textContent=txt};requestAnimationFrame(step)}catch(_){}}
+function countUp(root){if(prefs.anim===false)return;try{const el=root.querySelector('.hero .big bdi, .balbox .amt bdi, .kpi .v bdi, .cres b bdi');if(!el)return;const txt=el.textContent,n=parseFloat(txt.replace(/[^\d.]/g,''));if(!(n>0)||el.dataset.cu)return;el.dataset.cu=1;const t0=performance.now(),D=650,neg=/^\s*[-−]/.test(txt),fmt=v=>(neg?'-':'')+grp(v);const step=t=>{const p=Math.min(1,(t-t0)/D),e=1-Math.pow(1-p,3);el.textContent=fmt(Math.round(n*e));if(p<1)requestAnimationFrame(step);else el.textContent=txt};requestAnimationFrame(step)}catch(_){}}
 /* 💰 تمّ */
 let lastAmt=0;document.addEventListener('input',e=>{const t=e.target;if(t&&(t.id==='fv-a'||t.id==='ip-a'||t.id==='pa'))lastAmt=num(t.value)},true);
 function celebrate(o){if(prefs.anim===false)return;const old=$('#celeb');if(old)old.remove();
@@ -6643,6 +6655,82 @@ async function ggCheckUpdate(){if(!navigator.onLine)return toast(tr('ما كاي
     if(v>APP_VER){try{localStorage.setItem('gg-swv',String(v))}catch(_){}const reg=await navigator.serviceWorker.register('sw.js?v='+v,{updateViaCache:'none'});watchReg(reg);try{await reg.update()}catch(_){}toast(tr(`كاين تحديث (${v})، راني نحمّل…`,`Mise à jour ${v} en cours…`))}
     else toast(tr(`عندك آخر نسخة (${APP_VER}) ✅`,`Vous avez la dernière version (${APP_VER}) ✅`))}catch(_){toast(tr('ما قدرتش نتحقق.','Vérification impossible.'))}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act=chk-upd]');if(!b)return;e.stopPropagation();ggCheckUpdate()},true);
+
+/* ---------- v84: تصحيح سعر الشراء مباشرة (صفحة المورّد + حركة السلعة) ---------- */
+function pcSell(key){const id=String(key||'').slice(2);let p=0,w=0;
+  if(String(key).startsWith('g:')){const t=types().find(x=>x.id===id);if(!t)return null;p=num(t.price);w=num(t.priceW)||p}
+  else{const a=S.arts[id];if(!a)return null;p=num(a.price);w=num(a.priceW)||p}
+  if(!(p>0))return null;return{p,w,lo:Math.min(p,w),hi:Math.max(p,w)}}
+function pcFlag(key,c){const s=pcSell(key);c=num(c);if(!s||!(c>0))return'';if(c>s.hi)return'hi';if(c<s.lo*0.25)return'lo';return''}
+const pcAr=()=>isFr()?'→':'←';
+const pcDot=f=>f==='hi'?'🔴 ':f==='lo'?'🟠 ':'';
+function pcRowHTML(p,sid){const f=pcFlag(p.key,p.price);
+  return `<button type="button" class="pcrow ${f}" data-act="pc-edit" data-key="${esc(p.key)}" data-sup="${esc(sid)}" aria-label="${tr('تعديل سعر','Modifier le prix')} ${esc(p.name)}"><span class="pcn">${esc(p.name)}</span><span class="pcv">${pcDot(f)}<b><bdi dir="ltr">${grp(p.price)}</bdi></b> / ${esc(p.unit)} · ${fdate(p.date)}</span><span class="pced">${ic('edit')}</span></button>`}
+function pcListNote(P){const n=P.filter(p=>pcFlag(p.key,p.price)).length;
+  return n?`<div class="pcnote">⚠️ ${tr(`${n} سعر يبان غالط. اضغط عليه باش تصلحو.`,`${n} prix semblent faux. Touchez pour corriger.`)}</div>`:`<div class="note">${tr('اضغط على أي سعر باش تصلحو.','Touchez un prix pour le corriger.')}</div>`}
+function pcMvPrice(m){const f=pcFlag('g:'+m.typeId,m.costM2);return `<span class="${f?'pcbad '+f:''}">${pcDot(f)}${DA(m.costM2)}/${tr('م²','m²')}</span>`}
+function pcTargets(o){const g=o.col==='stock',src=g?S.stock:S.amv,k=g?'typeId':'articleId',pf=g?'costM2':'unitCost';
+  return Object.entries(src).filter(([,m])=>m.kind==='in'&&m[k]===o.item&&(m.supplierId||'')===(o.sid||'')&&Math.abs(num(m[pf])-o.price)<0.001)}
+let pcd=null;
+function pcNewP(){const d=pcd;if(!d)return 0;const v=num(d.v);if(!(v>0))return 0;let x=v;
+  if(d.mode==='sheet')x=d.sa>0?v/d.sa:0;else if(d.mode==='tot')x=d.g?(d.area>0?v/d.area:0):(d.qty>0?v/d.qty:0);
+  return d.g?Math.round(x):Math.round(x*100)/100}
+function pcCalc(){const d=pcd,np=pcNewP();let nt=0,op=0,npd=0;
+  for(const [,m] of d.T){const nc=Math.round((d.g?num(m.area):num(m.qty))*np),pd=num(m.paid),full=pd>0&&pd>=num(m.cost)-0.5;nt+=nc;op+=pd;npd+=full?nc:Math.min(pd,nc)}
+  return{np,nt,op,npd}}
+function pcInfo(){const d=pcd,c=pcCalc(),s=pcSell(d.key),f=c.np>0?pcFlag(d.key,c.np):'';let h='';
+  if(c.np>0&&d.mode!=='m2')h+=`<div class="pcbig">= <b><bdi dir="ltr">${d.g?grp(c.np):String(c.np)}</bdi></b> ${CUR()}/${esc(d.unit)}</div>`;
+  if(s)h+=`<div class="note">${tr('سعر البيع','Prix de vente')}: ${tr('حرفي','atelier')} ${grp(s.p)}${s.w!==s.p?` · ${tr('زبون','client')} ${grp(s.w)}`:''}</div>`;
+  if(c.np>0&&s){const mg=s.p-c.np;h+=f==='hi'?`<div class="pcwarn hi">⚠️ ${tr('مازال أكبر من سعر البيع! تأكد من الرقم.','Toujours supérieur au prix de vente !')}</div>`:f==='lo'?`<div class="pcwarn lo">⚠️ ${tr('رخيص بزاف مقارنة بسعر البيع. متأكد؟','Très bas par rapport au prix de vente. Sûr ?')}</div>`
+    :`<div class="pcok">✅ ${d.g?tr('ربح المتر','Marge au m²'):tr('ربح الوحدة','Marge unitaire')} ${mg>=0?'+':''}${grp(mg)} (<bdi dir="ltr">${Math.round(mg/s.p*100)}%</bdi>)</div>`}
+  h+=`<div class="pcsum"><div class="rowflex between"><span>${tr('يتبدّل في','Appliqué à')}</span><b>${d.T.length} ${d.T.length>1?tr('فواتير','achats'):tr('فاتورة','achat')} · ${d.g?`<bdi dir="ltr">${dec2s(d.sheets)}</bdi> ${tr('لوح','plaques')} · ${M2(d.area)}`:`<bdi dir="ltr">${dec2s(d.qty)}</bdi> ${esc(d.unit)}`}</b></div>
+    <div class="rowflex between"><span>${tr('مجموع الشراء','Total d’achat')}</span><b>${DA(d.oldTot)}${c.np>0?` ${pcAr()} ${DA(c.nt)}`:''}</b></div>`;
+  if(d.sid&&c.np>0){const full=d.T.every(([,m])=>num(m.paid)>0&&num(m.paid)>=num(m.cost)-0.5);
+    h+=`<div class="rowflex between"><span>${tr('الدفع','Paiement')}</span><b>${full?tr('مخلّص كامل ← يبقى مخلّص كامل','Payé → reste payé'):`${DA(c.op)} ${pcAr()} ${DA(c.npd)}`}</b></div>`;
+    const st=S.sstats[d.sid]||{bal:0},nb=num(st.bal)-(d.oldTot-c.nt)+(c.op-c.npd);
+    h+=`<div class="rowflex between"><span>${tr('المتبقي علينا للمورّد','Reste dû au fournisseur')}</span><b>${DA(st.bal)} ${pcAr()} ${DA(nb)}</b></div>`;
+    if(nb<-0.5)h+=`<div class="pcwarn lo">⚠️ ${tr('يولّي المورّد عليه دراهم (دفعتلو أكثر من المشتريات). إذا الدفع ثاني غالط، صلحو من «الحساب».','Le fournisseur vous devra de l’argent. Corrigez aussi les paiements si besoin.')}</div>`}
+  return h+`</div>`}
+function pcOpen(o){const T=pcTargets(o);if(!T.length)return toast(tr('ما لقيتش فاتورة الشراء.','Achat introuvable.'));
+  const g=o.col==='stock',lastE=T.slice().sort((x,y)=>(y[1].date||'').localeCompare(x[1].date||'')||(y[1].createdAt||0)-(x[1].createdAt||0))[0],last=lastE[1];
+  const a=g?null:S.arts[o.item]||{},name=g?((types().find(t=>t.id===o.item)||{}).name||last.type||'?'):(a.name||last.name||'?');
+  pcd={...o,key:(g?'g:':'a:')+o.item,T,g,last,lastId:lastE[0],name,unit:g?tr('م²','m²'):unitTr(a.unit),
+    area:T.reduce((s,[,m])=>s+num(m.area),0),qty:T.reduce((s,[,m])=>s+num(m.qty),0),sheets:T.reduce((s,[,m])=>s+num(m.sheets),0),
+    sw:num(last.sw),sh:num(last.sh),sa:g?num(last.sw)*num(last.sh)/10000:0,oldTot:T.reduce((s,[,m])=>s+num(m.cost),0),mode:'m2',v:'',warned:false};
+  pcDraw('#pc-v')}
+function pcDraw(focus){const d=pcd,m=$('#modal');if(!d)return;const f=pcFlag(d.key,d.price),meters=d.g&&d.sw>0&&d.sh>0&&(d.sw<20||d.sh<20);
+  const modes=d.g?[['m2',tr('للمتر²','au m²')],...(meters||!(d.sa>0)?[]:[['sheet',tr('للّوح','la plaque')]]),['tot',tr('المجموع','le total')]]:[['m2',tr('للوحدة','à l’unité')],['tot',tr('المجموع','le total')]];
+  const lab=d.mode==='sheet'?`${tr('سعر اللوح الواحد','Prix d’une plaque')} (<bdi dir="ltr">${d.sw}×${d.sh}</bdi> = ${M2(d.sa)})`:d.mode==='tot'?(d.g?`${tr('المبلغ اللي خلصت على','Montant payé pour')} ${M2(d.area)}`:`${tr('المبلغ اللي خلصت على','Montant payé pour')} <bdi dir="ltr">${dec2s(d.qty)}</bdi> ${esc(d.unit)}`):`${tr('سعر الشراء','Prix d’achat')} / ${esc(d.unit)}`;
+  m.innerHTML=`<div class="sheet pcsh" role="dialog" aria-modal="true" aria-labelledby="pc-t">
+    <h2 id="pc-t">✏️ ${tr('تصحيح سعر الشراء','Corriger le prix d’achat')}: ${esc(d.name)}</h2>
+    <div class="note">${d.sid?esc((S.sups[d.sid]||{}).name||d.last.supplier||''):tr('بلا مورّد','Sans fournisseur')} · ${fdate(d.last.date)}</div>
+    <div class="pccur ${f}">${tr('السعر الحالي','Prix actuel')}: <b><bdi dir="ltr">${grp(d.price)}</bdi> ${CUR()}/${esc(d.unit)}</b>${f==='hi'?` · ${tr('أكبر من سعر البيع','supérieur au prix de vente')}`:f==='lo'?` · ${tr('رخيص بزاف','très bas')}`:''}</div>
+    ${meters?`<div class="pcwarn lo">⚠️ ${tr(`المقاس مكتوب بالمتر (${d.sw}×${d.sh}) ولازم بالسنتيمتر. صلحو من «فتح فاتورة الشراء كاملة» ← ✏️ تعديل.`,`Dimensions en mètres (${d.sw}×${d.sh}) : corrigez-les dans l’achat.`)}</div>`:''}
+    <div class="seg">${modes.map(([k,l])=>`<button type="button" data-pm="${k}" class="${d.mode===k?'on':''}">${l}</button>`).join('')}</div>
+    <div class="field"><label for="pc-v">${lab}</label><input id="pc-v" inputmode="decimal" dir="ltr" value="${esc(d.v)}" placeholder="${d.mode==='m2'?'':esc(String(grpTxt(d.price)))}" autocomplete="off"></div>
+    <div id="pc-i" class="stack" style="gap:6px">${pcInfo()}</div>
+    <button type="button" class="btn plain" data-pv="1" style="justify-self:start">🧾 ${tr('فتح فاتورة الشراء كاملة (المقاس، الكمية…)','Ouvrir l’achat complet')}</button>
+    <p class="err" id="pc-e"></p>
+    <div class="actions"><button class="btn line" data-m="0">${tr('إلغاء','Annuler')}</button><button class="btn" data-m="1" id="pc-ok">${tr('حفظ','Enregistrer')}</button></div></div>`;
+  m.hidden=false;if(focus)setTimeout(()=>{const x=$(focus);if(x)x.focus()},30);
+  const done=()=>{m.hidden=true;m.innerHTML='';m.onclick=null;m.oninput=null;pcd=null};
+  m.oninput=e=>{if(e.target.id!=='pc-v'||!pcd)return;pcd.v=e.target.value;pcd.warned=false;const ok=$('#pc-ok');if(ok)ok.textContent=tr('حفظ','Enregistrer');const er=$('#pc-e');if(er)er.textContent='';const x=$('#pc-i');if(x)x.innerHTML=pcInfo()};
+  m.onclick=async e=>{e.stopPropagation();if(!pcd)return;
+    if(e.target.closest('[data-pv]')){const gk=pcd.last.pid||('x'+pcd.lastId);done();return go('purview',{id:gk})}
+    const pm=e.target.closest('[data-pm]');if(pm){pcd.mode=pm.dataset.pm;pcd.v='';pcd.warned=false;return pcDraw('#pc-v')}
+    const b=e.target.closest('[data-m]');if(!b){if(e.target===m)done();return}if(b.dataset.m==='0')return done();
+    const c=pcCalc(),er=$('#pc-e');if(!(c.np>0)){if(er)er.textContent=tr('اكتب السعر.','Saisissez le prix.');return}
+    if(pcFlag(pcd.key,c.np)&&!pcd.warned){pcd.warned=true;if(er)er.textContent=tr('السعر مازال يبان غالط. اضغط «حفظ» مرة أخرى إذا راك متأكد.','Le prix semble encore anormal. Appuyez à nouveau pour confirmer.');b.textContent=tr('حفظ رغم هذا','Enregistrer quand même');return}
+    const d=pcd,np=c.np,now=Date.now();
+    const ok=await write(async()=>{for(const [mid,m0] of d.T){const nc=Math.round((d.g?num(m0.area):num(m0.qty))*np),pd=num(m0.paid),full=pd>0&&pd>=num(m0.cost)-0.5,npd=full?nc:Math.min(pd,nc);
+        await db.doc((d.g?'stock/':'amoves/')+mid).update(d.g?{costM2:np,cost:nc,paid:npd,editedAt:now}:{unitCost:np,cost:nc,paid:npd,editedAt:now})}
+      if(!d.g){const a=S.arts[d.item];if(a&&Math.abs(num(a.cost)-d.price)<0.001)await db.doc('articles/'+d.item).update({cost:np})}},tr('تم تصحيح السعر. الأرباح والمخزون تصلحو.','Prix corrigé. Bénéfices et stock mis à jour.'));
+    if(ok){done();render()}}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act="pc-edit"]');if(!b)return;e.stopPropagation();if(isStaff())return;
+  if(b.dataset.mid){const m=S.stock[b.dataset.mid];if(!m)return;return pcOpen({col:'stock',item:m.typeId,sid:m.supplierId||'',price:num(m.costM2)})}
+  const key=b.dataset.key||'',sid=b.dataset.sup||'',g=key.startsWith('g:'),item=key.slice(2),src=g?S.stock:S.amv,k=g?'typeId':'articleId';let best=null;
+  for(const m of Object.values(src))if(m.kind==='in'&&m[k]===item&&(m.supplierId||'')===sid&&(!best||m.date>best.date||(m.date===best.date&&(m.createdAt||0)>(best.createdAt||0))))best=m;
+  if(best)pcOpen({col:g?'stock':'amoves',item,sid,price:num(g?best.costM2:best.unitCost)})},true);
 
 function backupFile(){const data={app:'daftar-zujaj',version:2,exportedAt:new Date().toISOString(),docs:LocalDB.dump()};return new File([JSON.stringify(data)],`tumayd-backup-${today()}.json`,{type:'application/json'})}
 function downloadFile(f){const u=URL.createObjectURL(f);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
