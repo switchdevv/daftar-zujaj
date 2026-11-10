@@ -970,7 +970,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=80; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=81; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6555,7 +6555,8 @@ async function vrStop(send){if(!VR.on)return;VR.on=false;vrBar(false);const mr=V
   if(dur<700){toast(tr('احبس على المايك وهدر، ومن بعد طلق.','Maintenez le micro et parlez.'));return}
   vrProcess(blob)}
 async function vrWav(blob){const ab=await blob.arrayBuffer();const ac=new(window.AudioContext||window.webkitAudioContext)();let buf;try{buf=await ac.decodeAudioData(ab)}finally{try{ac.close()}catch(_){}}
-  const SR=16000,len=Math.max(1,Math.ceil(buf.duration*SR));const off=new OfflineAudioContext(1,len,SR);const src=off.createBufferSource();src.buffer=buf;src.connect(off.destination);src.start();const r=await off.startRendering();const d=r.getChannelData(0);
+  const SR=16000,len=Math.max(1,Math.ceil(buf.duration*SR));const off=new OfflineAudioContext(1,len,SR);const src=off.createBufferSource();src.buffer=buf;src.connect(off.destination);src.start();const r=await off.startRendering();let d=r.getChannelData(0);
+  {let pk=0;for(let i=0;i<d.length;i++)pk=Math.max(pk,Math.abs(d[i]));const th=Math.max(0.01,pk*0.08),pad=Math.floor(SR*0.3);let a=0,b=d.length-1;while(a<b&&Math.abs(d[a])<th)a++;while(b>a&&Math.abs(d[b])<th)b--;a=Math.max(0,a-pad);b=Math.min(d.length,b+pad);if(b-a>SR*0.4)d=d.subarray(a,b)}
   const out=new DataView(new ArrayBuffer(44+d.length*2));const W=(o,s)=>{for(let i=0;i<s.length;i++)out.setUint8(o+i,s.charCodeAt(i))};
   W(0,'RIFF');out.setUint32(4,36+d.length*2,true);W(8,'WAVE');W(12,'fmt ');out.setUint32(16,16,true);out.setUint16(20,1,true);out.setUint16(22,1,true);out.setUint32(24,SR,true);out.setUint32(28,SR*2,true);out.setUint16(32,2,true);out.setUint16(34,16,true);W(36,'data');out.setUint32(40,d.length*2,true);
   let peak=0;for(let i=0;i<d.length;i++)peak=Math.max(peak,Math.abs(d[i]));const g=peak>0.001&&peak<0.5?0.9/peak:1;
@@ -6578,18 +6579,19 @@ CLIENTS (copy the exact spelling of the matching one): ${cl||'-'}
 GLASS TYPES (copy exactly): ${ty||'-'}
 PAGES: ${pg}
 Rules: dimensions are centimeters. Algerians often count money in centimes: "مليون/ملاين" = 10000 DA each ("خمسة ملاين" = 50000). Otherwise amounts are dinars unless they say سنتيم. Quantity words: زوج=2. If nothing fits, use "c":"".`}
-async function vrGemini(b64){const key=gKey();const tried=[];let models=[localStorage.getItem('gg-gmodel'),'gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash'].filter((x,i,a)=>x&&a.indexOf(x)===i);
-  for(const m of models){tried.push(m);const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),30000);let r;
-    try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':key},
-      body:JSON.stringify({contents:[{role:'user',parts:[{text:vrPrompt()},{inline_data:{mime_type:'audio/wav',data:b64}}]}],generationConfig:{temperature:0,responseMimeType:'application/json'}})})}
-    catch(e){clearTimeout(to);throw{k:'net'}}clearTimeout(to);
-    if(r.status===404)continue;if(r.status===429)throw{k:'rate'};if(r.status===400||r.status===401||r.status===403){let j={};try{j=await r.json()}catch(_){}const msg=String((j.error&&j.error.message)||'');if(/model/i.test(msg)&&!/key/i.test(msg))continue;throw{k:'key',msg}}
-    if(!r.ok)throw{k:'http',msg:String(r.status)};const j=await r.json();try{localStorage.setItem('gg-gmodel',m)}catch(_){}
+async function vrGemini(b64){const key=gKey();const tried=[];const models=[localStorage.getItem('gg-gmodel2'),'gemini-flash-lite-latest','gemini-2.5-flash-lite','gemini-2.0-flash-lite','gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash'].filter((x,i,a)=>x&&a.indexOf(x)===i);
+  const call=async(m,think)=>{const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),25000);const gc={temperature:0,responseMimeType:'application/json',maxOutputTokens:400};if(think)gc.thinkingConfig={thinkingBudget:0};
+    try{return await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':key},
+      body:JSON.stringify({contents:[{role:'user',parts:[{text:vrPrompt()},{inline_data:{mime_type:'audio/wav',data:b64}}]}],generationConfig:gc})})}catch(e){throw{k:'net'}}finally{clearTimeout(to)}};
+  for(const m of models){tried.push(m);let r=await call(m,true);
+    if(r.status===400){let j={};try{j=await r.clone().json()}catch(_){}if(/think/i.test(String((j.error&&j.error.message)||'')))r=await call(m,false)}
+    if(r.status===404)continue;if(r.status===429)throw{k:'rate'};if(r.status===400||r.status===401||r.status===403){let j={};try{j=await r.json()}catch(_){}const msg=String((j.error&&j.error.message)||'');if(/model|not found|not supported/i.test(msg)&&!/key/i.test(msg))continue;throw{k:'key',msg}}
+    if(!r.ok)throw{k:'http',msg:String(r.status)};const j=await r.json();try{localStorage.setItem('gg-gmodel2',m)}catch(_){}VR.model=m;
     const txt=(((j.candidates||[])[0]||{}).content||{parts:[]}).parts.map(p=>p.text||'').join('');let o={};try{o=JSON.parse(txt.replace(/^```(json)?|```$/g,'').trim())}catch(_){o={t:txt,c:''}}return o}
   throw{k:'model',msg:tried.join(',')}}
 async function vrProcess(blob){if(!$('.vxsheet'))vxOpen(true);const s=$('#vx-said');VR.busy=true;if(s)s.innerHTML=`<span class="vxspin"></span> ${tr('راني نفهم…','Je comprends…')}`;
   try{if(!gKey()){if(s)s.textContent=tr('لازم تربط Gemini باش يفهم التسجيل.','Configurez Gemini.');vxKeyCard();return}
-    const b64=await vrWav(blob);const o=await vrGemini(b64);const t=String(o.t||'').trim(),c=String(o.c||'').trim();
+    const t1=performance.now();const b64=await vrWav(blob);const t2=performance.now();const o=await vrGemini(b64);const t3=performance.now();const dg=$('#vx-dbg');if(dg)dg.textContent=`${VR.model||''} · ${tr('تحضير','prép.')} ${((t2-t1)/1000).toFixed(1)}s · ${tr('فهم','IA')} ${((t3-t2)/1000).toFixed(1)}s · ${Math.round(b64.length*0.75/1024)}KB`;const t=String(o.t||'').trim(),c=String(o.c||'').trim();
     if(s)s.textContent=t?'«'+t+'»':tr('ما سمعت والو، عاود.','Rien entendu.');if(!t&&!c)return;const i=$('#vx-in');if(i)i.value=c||t;vxHandle([c||t,t].filter(Boolean))}
   catch(e){const k=e&&e.k;if(s)s.textContent=k==='rate'?tr('بزاف ديال الطلبات، جرّب بعد دقيقة.','Trop de requêtes, réessayez dans une minute.'):k==='key'?tr('مفتاح Gemini ماشي صحيح. عاود الصقو.','Clé Gemini invalide.'):k==='net'?tr('ما كاينش أنترنت ولا الاتصال بطيء.','Pas de connexion.'):tr('صرا مشكل، عاود.','Erreur, réessayez.')+(e&&e.msg?' ('+e.msg+')':'');if(k==='key')vxKeyCard()}
   finally{VR.busy=false}}
