@@ -822,6 +822,14 @@ button:active,.btn:active,.qa:active,.tb:active{transform:scale(.96)}
 @keyframes cpop{0%{transform:scale(.4);opacity:0}100%{transform:none;opacity:1}}@keyframes cfade{from{opacity:0}}
 html.noanim *,html.noanim *::before,html.noanim *::after{animation:none!important;transition:none!important}
 @media (prefers-reduced-motion:reduce){#main.pg-in,.celeb .coin{animation:none}}
+
+#boot.splash{position:fixed;inset:0;z-index:250}
+#boot.splash.out{animation:spout .45s ease-in both;pointer-events:none}
+@keyframes spout{0%{opacity:1;transform:none}100%{opacity:0;transform:scale(1.08)}}
+#shell.in{animation:shin .5s cubic-bezier(.2,.8,.2,1) both}
+@keyframes shin{0%{opacity:0;transform:translateY(40px) scale(.98)}100%{opacity:1;transform:none}}
+#boot.splash .mark{animation:lgpop .9s cubic-bezier(.2,.9,.3,1.3) both,lgfloat 2.2s 1s ease-in-out infinite alternate}
+@keyframes lgfloat{from{transform:translateY(0)}to{transform:translateY(-6px)}}
 </style>
 </head>
 <body>
@@ -876,7 +884,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=67; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=68; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -3493,8 +3501,9 @@ function render(){
   applyPrefs();
   const g=decideGate();
   if(g==='loading'){$('#boot').hidden=false;$('#gate').hidden=true;$('#shell').hidden=true;return}
-  if(g){if(gateMode!==g||$('#gate').hidden){gateMode=g;renderGate()}return}
-  $('#boot').hidden=true;$('#gate').hidden=true;$('#shell').hidden=false;
+  if(splashHold()){return}
+  if(g){splashOut();if(gateMode!==g||$('#gate').hidden){gateMode=g;renderGate()}return}
+  splashOut();$('#gate').hidden=true;$('#shell').hidden=false;
   $('#brand').innerHTML=`<button class="brandbtn" data-act="nav-me" aria-label="${tr('معلومات المحل والحساب','Magasin et compte')}">${brandHTML()}</button>`;
   if(isStaff()){if(dbv.tab==='profit')dbv.tab='debt';if(['setbk','setfeat','sups','sup','sform','spay','reports','stats','events','export','prices','tedit','shop','acct','cloud','svcs','import','wipe','me','staff'].includes(view.name))view={name:'home'}}
   document.body.classList.toggle('staff',isStaff());
@@ -6094,6 +6103,18 @@ function celebrate(o){if(prefs.anim===false)return;const old=$('#celeb');if(old)
 {const _a=applyPrefs;applyPrefs=function(){_a();document.documentElement.classList.toggle('noanim',prefs.anim===false)}}
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act=anim]');if(!b)return;e.stopPropagation();prefs.anim=b.dataset.v!=='off';savePrefs();applyPrefs();render();toast(prefs.anim?tr('الحركات مفعّلة.','Animations activées.'):tr('الحركات مقلّلة.','Animations réduites.'))},true);
 applyPrefs();
+
+
+/* ---- v68: شاشة الفتح — مدة دنيا + خروج بانزلاق ---- */
+const SPLASH_T0=performance.now(),SPLASH_MIN=(matchMedia&&matchMedia('(display-mode: standalone)').matches)||sessionStorage.getItem('gg-splashed')?1300:900;
+let splashDone=false,splashTimer=null;
+function splashHold(){if(splashDone||prefs.anim===false)return false;const b=$('#boot');if(!b||b.hidden)return false;if(sessionStorage.getItem('gg-splashed')){splashDone=true;return false}
+  const left=SPLASH_MIN-(performance.now()-SPLASH_T0);if(left<=0)return false;
+  if(!splashTimer)splashTimer=setTimeout(()=>{splashTimer=null;splashDone=true;render()},left+20);return true}
+function splashOut(){const b=$('#boot');if(!b)return;splashDone=true;try{sessionStorage.setItem('gg-splashed','1')}catch(_){}
+  if(b.hidden||prefs.anim===false){b.hidden=true;return}
+  if(b.classList.contains('out'))return;b.classList.add('out');const sh=$('#shell');if(sh){sh.classList.remove('in');void sh.offsetWidth;sh.classList.add('in')}
+  setTimeout(()=>{b.hidden=true;b.classList.remove('out')},460)}
 
 function backupFile(){const data={app:'daftar-zujaj',version:2,exportedAt:new Date().toISOString(),docs:LocalDB.dump()};return new File([JSON.stringify(data)],`tumayd-backup-${today()}.json`,{type:'application/json'})}
 function downloadFile(f){const u=URL.createObjectURL(f);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
