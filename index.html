@@ -884,7 +884,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=68; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=69; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6616,8 +6616,14 @@ if('serviceWorker' in navigator&&location.protocol!=='file:'){
     if(!busy())return doReload();
     toast(tr('تحديث جديد جاهز، يُطبَّق عند إنهاء هذه الصفحة.','Mise à jour prête, appliquée après ce formulaire.'));
     const t=setInterval(()=>{if(!busy()){clearInterval(t);doReload()}},1500)});
-  window.addEventListener('load',()=>{navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(reg=>{
-    const chk=()=>{if(navigator.onLine)reg.update().catch(()=>{})};
+  const SW_URL=(()=>{try{const v=+localStorage.getItem('gg-swv')||0;return v>=APP_VER&&v>0?'sw.js?v='+v:'sw.js'}catch(_){return 'sw.js'}})();
+  /* تحديث فوري: ver.json يتجاوز cache تاع GitHub (10 دقايق) */
+  let verBusy=false;
+  const verCheck=()=>{if(!navigator.onLine||verBusy)return Promise.resolve(0);verBusy=true;return fetch('ver.json?_='+Date.now(),{cache:'no-store'}).then(r=>r.ok?r.json():null).then(j=>{const v=j&&+j.v||0;if(v>APP_VER){try{localStorage.setItem('gg-swv',String(v))}catch(_){}
+      return navigator.serviceWorker.register('sw.js?v='+v,{updateViaCache:'none'}).then(()=>v).catch(()=>v)}return v}).catch(()=>0).finally(()=>{verBusy=false})};
+  window.addEventListener('load',()=>{navigator.serviceWorker.register(SW_URL,{updateViaCache:'none'}).then(reg=>{
+    const chk=()=>{if(!navigator.onLine)return;verCheck().then(v=>{if(!(v>APP_VER))reg.update().catch(()=>{})})};chk();
+    if(!navigator.serviceWorker.controller&&reg.active&&!sessionStorage.getItem('gg-ctl')){try{sessionStorage.setItem('gg-ctl','1')}catch(_){}setTimeout(()=>{if(!navigator.serviceWorker.controller)location.reload()},800)}
     document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='visible')chk()});
     setInterval(chk,30*60*1000)}).catch(()=>{})})}
 </script>

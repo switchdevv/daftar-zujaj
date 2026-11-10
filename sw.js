@@ -1,9 +1,15 @@
 // دفتر الزجاج — service worker: يخلي التطبيق يحل بلا أنترنت
-const VERSION = 'tumayd-v68';
+const VERSION = 'tumayd-v69';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png', './IBMPlexSansArabic-Regular.woff2', './IBMPlexSansArabic-Medium.woff2', './IBMPlexSansArabic-SemiBold.woff2', './IBMPlexSansArabic-Bold.woff2'];
 
+// ?v=NN في رابط sw.js = نسخة جديدة؛ نجيب الصفحة والمانيفست بنفس الرقم باش نتجاوز cache تاع GitHub
+const Q = self.location.search || '';
+const FRESH = ['./index.html', './manifest.webmanifest'];
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(c => c.addAll(SHELL)).then(() => self.skipWaiting()));
+  e.waitUntil(caches.open(VERSION).then(async c => {
+    await c.addAll(SHELL.filter(p => !FRESH.includes(p) && p !== './'));
+    for (const p of FRESH) { const r = await fetch(p + Q, { cache: 'no-store' }); if (!r.ok) throw new Error('fetch ' + p); await c.put(p, r.clone()); if (p === './index.html') await c.put('./', r.clone()); }
+  }).then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
