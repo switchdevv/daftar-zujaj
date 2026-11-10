@@ -916,6 +916,10 @@ body.vrec .vxsheet.gem .vxmic{background:#e0362c;transform:scale(1.15)}
 .vxspin{display:inline-block;width:14px;height:14px;border:2px solid var(--line);border-top-color:var(--accent);border-radius:50%;animation:vxsp .8s linear infinite;vertical-align:-2px}@keyframes vxsp{to{transform:rotate(360deg)}}
 .vxactv{width:100%;border:1px dashed var(--accent);background:var(--accent-soft);color:var(--accent);border-radius:14px;padding:12px;font:inherit;font-weight:700}
 .vxkey ol{margin:0;padding-inline-start:20px;line-height:1.9;font-size:.88rem}.vxkey a{color:var(--accent);word-break:break-all}
+
+.updbar{position:fixed;top:calc(8px + env(safe-area-inset-top,0px));left:50%;transform:translateX(-50%);z-index:60;background:var(--surface);color:var(--ink);border:1px solid var(--line);border-radius:99px;padding:8px 14px;font-size:.82rem;font-weight:700;box-shadow:0 8px 22px rgba(0,0,0,.18);white-space:nowrap}
+.updbar.ok{background:var(--ok);color:#fff;border-color:transparent}
+.linkbtn{border:0;background:none;color:var(--accent);font:inherit;text-decoration:underline;padding:0;cursor:pointer}
 </style>
 </head>
 <body>
@@ -970,7 +974,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=81; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=82; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -2539,7 +2543,7 @@ function settingsHTML(){
   <div class="set-group adm"><button class="set-row" data-act="nav-wipe"><span class="t"><span class="ib" style="background:var(--debt-soft);color:var(--debt)">${ic('trash')}</span><span style="color:var(--debt)">${tr('حذف جميع الحرفيين','Supprimer tous les clients')}<small>${tr('بعد تحميل نسخة احتياطية وكلمة سر المسؤول','Après sauvegarde et mot de passe admin')}</small></span></span>${ic('chev','flip')}</button></div>
   ${installEvt?`<button class="btn full" data-act="install">${ic('install')}${tr('تثبيت التطبيق على الشاشة','Installer l’application')}</button>`:''}
   <button class="btn line full" data-act="lock" style="margin-top:6px">${ic('lock')}${tr('قفل التطبيق والخروج','Verrouiller et quitter')}</button>
-  <p class="note" style="text-align:center;margin:8px auto 0"><bdi dir="ltr">Guessoum Glass</bdi> · ${tr('النسخة','Version')} <b><bdi dir="ltr">${APP_VER}</bdi></b></p>
+  <p class="note" style="text-align:center;margin:8px auto 0"><bdi dir="ltr">Guessoum Glass</bdi> · ${tr('النسخة','Version')} <b><bdi dir="ltr">${APP_VER}</bdi></b> · <button type="button" class="linkbtn" data-act="chk-upd">${tr('تحقق من التحديث','Vérifier la mise à jour')}</button></p>
   </div>`;
 }
 function subSetHTML(title,inner){return `<div class="stack">${backBtn('nav-set',tr('الإعدادات','Réglages'))}<h2>${title}</h2>${inner}</div>`}
@@ -6620,6 +6624,20 @@ function vrFab(){if(!VR_OK)return;let f=$('#vxfab');if(!f){f=document.createElem
   f.hidden=!$('#shell')||$('#shell').hidden}
 {const _r=render;render=function(){const r=_r.apply(this,arguments);try{vrFab()}catch(_){}return r}}
 document.addEventListener('pointerup',()=>{if(VR.on)vrStop(!VR.cancel)});
+
+
+/* ---- v82: تحديث أوضح وأسرع ---- */
+function updBanner(t,kind){let b=$('#updbar');if(!t){if(b)b.remove();return}if(!b){b=document.createElement('div');b.id='updbar';b.className='updbar';document.body.appendChild(b)}b.className='updbar '+(kind||'');b.innerHTML=t}
+function watchReg(reg){if(!reg||reg.__gg)return;reg.__gg=1;
+  const track=w=>{if(!w)return;updBanner(`<span class="vxspin"></span> ${tr('راني نحمّل تحديث جديد… خلّي التطبيق مفتوح','Téléchargement de la mise à jour…')}`,'');
+    w.addEventListener('statechange',()=>{if(w.state==='installed'||w.state==='activated')updBanner(`✅ ${tr('التحديث جاهز، راهو يتطبّق…','Mise à jour prête…')}`,'ok');if(w.state==='redundant')updBanner('')})};
+  if(reg.installing)track(reg.installing);reg.addEventListener('updatefound',()=>track(reg.installing))}
+if('serviceWorker' in navigator&&location.protocol!=='file:'){navigator.serviceWorker.getRegistration().then(watchReg).catch(()=>{});navigator.serviceWorker.ready.then(watchReg).catch(()=>{})}
+async function ggCheckUpdate(){if(!navigator.onLine)return toast(tr('ما كاينش أنترنت.','Pas de connexion.'));
+  try{const r=await fetch('ver.json?_='+Date.now(),{cache:'no-store'});const j=await r.json();const v=+j.v||0;
+    if(v>APP_VER){try{localStorage.setItem('gg-swv',String(v))}catch(_){}const reg=await navigator.serviceWorker.register('sw.js?v='+v,{updateViaCache:'none'});watchReg(reg);try{await reg.update()}catch(_){}toast(tr(`كاين تحديث (${v})، راني نحمّل…`,`Mise à jour ${v} en cours…`))}
+    else toast(tr(`عندك آخر نسخة (${APP_VER}) ✅`,`Vous avez la dernière version (${APP_VER}) ✅`))}catch(_){toast(tr('ما قدرتش نتحقق.','Vérification impossible.'))}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act=chk-upd]');if(!b)return;e.stopPropagation();ggCheckUpdate()},true);
 
 function backupFile(){const data={app:'daftar-zujaj',version:2,exportedAt:new Date().toISOString(),docs:LocalDB.dump()};return new File([JSON.stringify(data)],`tumayd-backup-${today()}.json`,{type:'application/json'})}
 function downloadFile(f){const u=URL.createObjectURL(f);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}

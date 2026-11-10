@@ -1,15 +1,20 @@
 // دفتر الزجاج — service worker: يخلي التطبيق يحل بلا أنترنت
-const VERSION = 'tumayd-v81';
+const VERSION = 'tumayd-v82';
 const SHELL = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png', './IBMPlexSansArabic-Regular.woff2', './IBMPlexSansArabic-Medium.woff2', './IBMPlexSansArabic-SemiBold.woff2', './IBMPlexSansArabic-Bold.woff2'];
 
 // ?v=NN في رابط sw.js = نسخة جديدة؛ نجيب الصفحة والمانيفست بنفس الرقم باش نتجاوز cache تاع GitHub
 const Q = self.location.search || '';
 const FRESH = ['./index.html', './manifest.webmanifest'];
+// التحديث: نجيبو غير الصفحة والمانيفست، والأيقونات والخطوط ناخذوهم من النسخة القديمة (أسرع بزاف)
+const getFresh = async p => { for (let i = 0; i < 3; i++) { try { const r = await fetch(p + Q, { cache: 'no-store' }); if (r.ok) return r; } catch (_) {} await new Promise(s => setTimeout(s, 800 * (i + 1))); } throw new Error('fetch ' + p); };
 self.addEventListener('install', e => {
-  e.waitUntil(caches.open(VERSION).then(async c => {
-    await c.addAll(SHELL.filter(p => !FRESH.includes(p) && p !== './'));
-    for (const p of FRESH) { const r = await fetch(p + Q, { cache: 'no-store' }); if (!r.ok) throw new Error('fetch ' + p); await c.put(p, r.clone()); if (p === './index.html') await c.put('./', r.clone()); }
-  }).then(() => self.skipWaiting()));
+  e.waitUntil((async () => {
+    const c = await caches.open(VERSION);
+    for (const p of FRESH) { const r = await getFresh(p); await c.put(p, r.clone()); if (p === './index.html') await c.put('./', r.clone()); }
+    await Promise.all(SHELL.filter(p => !FRESH.includes(p) && p !== './').map(async p => {
+      try { const old = await caches.match(p); if (old) { await c.put(p, old.clone()); return; } const r = await fetch(p); if (r.ok) await c.put(p, r); } catch (_) {}
+    }));
+  })().then(() => self.skipWaiting()));
 });
 
 self.addEventListener('activate', e => {
