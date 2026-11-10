@@ -974,7 +974,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=82; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=83; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6583,21 +6583,26 @@ CLIENTS (copy the exact spelling of the matching one): ${cl||'-'}
 GLASS TYPES (copy exactly): ${ty||'-'}
 PAGES: ${pg}
 Rules: dimensions are centimeters. Algerians often count money in centimes: "مليون/ملاين" = 10000 DA each ("خمسة ملاين" = 50000). Otherwise amounts are dinars unless they say سنتيم. Quantity words: زوج=2. If nothing fits, use "c":"".`}
-async function vrGemini(b64){const key=gKey();const tried=[];const models=[localStorage.getItem('gg-gmodel2'),'gemini-flash-lite-latest','gemini-2.5-flash-lite','gemini-2.0-flash-lite','gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash'].filter((x,i,a)=>x&&a.indexOf(x)===i);
-  const call=async(m,think)=>{const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),25000);const gc={temperature:0,responseMimeType:'application/json',maxOutputTokens:400};if(think)gc.thinkingConfig={thinkingBudget:0};
-    try{return await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':key},
-      body:JSON.stringify({contents:[{role:'user',parts:[{text:vrPrompt()},{inline_data:{mime_type:'audio/wav',data:b64}}]}],generationConfig:gc})})}catch(e){throw{k:'net'}}finally{clearTimeout(to)}};
-  for(const m of models){tried.push(m);let r=await call(m,true);
-    if(r.status===400){let j={};try{j=await r.clone().json()}catch(_){}if(/think/i.test(String((j.error&&j.error.message)||'')))r=await call(m,false)}
-    if(r.status===404)continue;if(r.status===429)throw{k:'rate'};if(r.status===400||r.status===401||r.status===403){let j={};try{j=await r.json()}catch(_){}const msg=String((j.error&&j.error.message)||'');if(/model|not found|not supported/i.test(msg)&&!/key/i.test(msg))continue;throw{k:'key',msg}}
-    if(!r.ok)throw{k:'http',msg:String(r.status)};const j=await r.json();try{localStorage.setItem('gg-gmodel2',m)}catch(_){}VR.model=m;
-    const txt=(((j.candidates||[])[0]||{}).content||{parts:[]}).parts.map(p=>p.text||'').join('');let o={};try{o=JSON.parse(txt.replace(/^```(json)?|```$/g,'').trim())}catch(_){o={t:txt,c:''}}return o}
-  throw{k:'model',msg:tried.join(',')}}
+async function vrGemini(b64){const key=gKey();const tried=[];let lastMsg='';const models=[localStorage.getItem('gg-gmodel2'),'gemini-flash-lite-latest','gemini-2.5-flash-lite','gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash'].filter((x,i,a)=>x&&a.indexOf(x)===i);
+  const call=async(m,v)=>{const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),25000);const gc={temperature:0,maxOutputTokens:400};if(v.json)gc.responseMimeType='application/json';if(v.think)gc.thinkingConfig={thinkingBudget:0};
+    const url=`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`+(v.qkey?`?key=${encodeURIComponent(key)}`:'');const h={'Content-Type':'application/json'};if(!v.qkey)h['x-goog-api-key']=key;
+    try{const r=await fetch(url,{method:'POST',signal:ctl.signal,headers:h,body:JSON.stringify({contents:[{role:'user',parts:[{text:vrPrompt()},{inline_data:{mime_type:'audio/wav',data:b64}}]}],generationConfig:gc})});let j=null;try{j=await r.json()}catch(_){}return{r,j,msg:String((j&&j.error&&(j.error.message||j.error.status))||'')}}
+    catch(e){throw{k:'net'}}finally{clearTimeout(to)}};
+  const variants=[{json:true,think:true},{json:true},{},{qkey:true}];
+  for(const m of models){tried.push(m);let res=null;
+    for(const v of variants){res=await call(m,v);if(res.r.ok)break;lastMsg=`${res.r.status} ${res.msg}`.trim();
+      if(res.r.status===429)throw{k:'rate',msg:res.msg};if(res.r.status===404||/not found|is not supported for generateContent|no longer available|deprecated/i.test(res.msg))break;
+      if(/location|region|country/i.test(res.msg))throw{k:'geo',msg:res.msg};if(res.r.status===403&&!v.qkey&&variants.indexOf(v)>=2)throw{k:/api key|credential/i.test(res.msg)?'key':'perm',msg:lastMsg}}
+    if(!res||!res.r.ok){if(res&&(res.r.status===401||/api key|api_key|credential|unauthenticated/i.test(res.msg))&&!/not found/i.test(res.msg))throw{k:'key',msg:lastMsg};continue}
+    try{localStorage.setItem('gg-gmodel2',m)}catch(_){}VR.model=m;const j=res.j||{};
+    const txt=(((j.candidates||[])[0]||{}).content||{parts:[]}).parts.map(p=>p.text||'').join('');let o={};try{o=JSON.parse(txt.replace(/^\s*```(json)?|```\s*$/g,'').trim())}catch(_){const mm=txt.match(/\{[\s\S]*\}/);try{o=mm?JSON.parse(mm[0]):{t:txt,c:''}}catch(__){o={t:txt,c:''}}}return o}
+  throw{k:'model',msg:lastMsg||tried.join(',')}}
 async function vrProcess(blob){if(!$('.vxsheet'))vxOpen(true);const s=$('#vx-said');VR.busy=true;if(s)s.innerHTML=`<span class="vxspin"></span> ${tr('راني نفهم…','Je comprends…')}`;
   try{if(!gKey()){if(s)s.textContent=tr('لازم تربط Gemini باش يفهم التسجيل.','Configurez Gemini.');vxKeyCard();return}
     const t1=performance.now();const b64=await vrWav(blob);const t2=performance.now();const o=await vrGemini(b64);const t3=performance.now();const dg=$('#vx-dbg');if(dg)dg.textContent=`${VR.model||''} · ${tr('تحضير','prép.')} ${((t2-t1)/1000).toFixed(1)}s · ${tr('فهم','IA')} ${((t3-t2)/1000).toFixed(1)}s · ${Math.round(b64.length*0.75/1024)}KB`;const t=String(o.t||'').trim(),c=String(o.c||'').trim();
     if(s)s.textContent=t?'«'+t+'»':tr('ما سمعت والو، عاود.','Rien entendu.');if(!t&&!c)return;const i=$('#vx-in');if(i)i.value=c||t;vxHandle([c||t,t].filter(Boolean))}
-  catch(e){const k=e&&e.k;if(s)s.textContent=k==='rate'?tr('بزاف ديال الطلبات، جرّب بعد دقيقة.','Trop de requêtes, réessayez dans une minute.'):k==='key'?tr('مفتاح Gemini ماشي صحيح. عاود الصقو.','Clé Gemini invalide.'):k==='net'?tr('ما كاينش أنترنت ولا الاتصال بطيء.','Pas de connexion.'):tr('صرا مشكل، عاود.','Erreur, réessayez.')+(e&&e.msg?' ('+e.msg+')':'');if(k==='key')vxKeyCard()}
+  catch(e){const k=e&&e.k;if(s)s.textContent=k==='rate'?tr('بزاف ديال الطلبات، جرّب بعد دقيقة.','Trop de requêtes, réessayez dans une minute.'):k==='key'?tr('Google رفض المفتاح.','Clé refusée par Google.'):k==='geo'?tr('Google ما يسمحش بهاد الخدمة من البلاد هذي.','Service indisponible dans ce pays.'):k==='perm'?tr('Google رفض الطلب (المشروع ولا الصلاحيات).','Requête refusée par Google.'):k==='net'?tr('ما كاينش أنترنت ولا الاتصال بطيء.','Pas de connexion.'):tr('Gemini ما جاوبش.','Gemini n’a pas répondu.');
+    const dg=$('#vx-dbg');if(dg&&e&&e.msg)dg.textContent='Google: '+String(e.msg).slice(0,220);if(k==='key')vxKeyCard()}
   finally{VR.busy=false}}
 /* المفتاح */
 function vxKeyCard(){const r=$('#vx-res');if(!r)return;if(isStaff()){r.innerHTML=`<div class="vxcard"><b>🔑 ${tr('الصوت الذكي ما زال ما تفعّلش.','Assistant vocal non configuré.')}</b><p class="note">${tr('اطلب من صاحب المحل يربط Gemini من هاتفو.','Demandez au gérant de le configurer.')}</p></div>`;return}
