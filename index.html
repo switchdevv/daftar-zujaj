@@ -891,6 +891,8 @@ html.noanim nav.bottom{transition:none}
 .vxsendb{width:auto;min-width:150px;background:var(--ok);color:#fff;font-size:1rem}
 .vxhint{text-align:center;margin:0}
 .vxsheet.listening .vxmic{background:var(--ok)}
+
+.vxdbg{font-size:.68rem;color:var(--faint);text-align:center;direction:ltr;min-height:0}
 </style>
 </head>
 <body>
@@ -945,7 +947,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=76; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=77; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6390,7 +6392,7 @@ function vxOpen(){if(!$('#shell')||$('#shell').hidden)return;const m=$('#modal')
   m.innerHTML=`<div class="sheet vxsheet" role="dialog" aria-modal="true"><div class="vxtop"><b>🎙️ ${tr('الأوامر الصوتية','Commandes vocales')}</b><span class="vxlang">${['ar-DZ','fr-FR'].map(l=>`<button type="button" data-vx="lang" data-v="${l}" class="${(l==='ar-DZ'?vxIsAr():!vxIsAr())?'on':''}">${l==='ar-DZ'?'ع':'Fr'}</button>`).join('')}</span><button type="button" class="fsx" data-vx="close">✕</button></div>
     ${VX_SR?`<button type="button" class="vxmic" data-vx="mic" aria-label="${tr('اضغط وهدر','Appuyez et parlez')}"><svg class="ic" viewBox="0 0 24 24">${ICONS.mic}</svg></button><div class="vxwave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div><div class="vxlive"><button type="button" class="btn vxsendb" data-vx="send">✓ ${tr('إرسال','Envoyer')}</button><button type="button" class="btn plain" data-vx="cancel" style="width:auto">${tr('إلغاء','Annuler')}</button></div><p class="note vxhint">${tr('اضغط على المايك وهدر، ومن بعد اضغط «✓ إرسال» (ولا سكت شوية ويبعث وحدو).','Touchez le micro, parlez, puis « ✓ Envoyer ».')}</p>`:`<p class="note" style="text-align:center">${tr('المايك يخدم في Chrome. تقدر تكتب الأمر هنا.','Le micro fonctionne dans Chrome. Vous pouvez écrire la commande.')}</p>`}
     <div class="vxsaid" id="vx-said">${tr('اضغط على المايك وقول واش تحب…','Touchez le micro et parlez…')}</div>
-    <div class="vxrow"><input id="vx-in" placeholder="${tr('ولا اكتب الأمر هنا…','ou écrivez la commande…')}" autocomplete="off"><button type="button" class="btn" data-vx="go" style="width:auto">➤</button></div>
+    <div class="vxdbg" id="vx-dbg"></div><div class="vxrow"><input id="vx-in" placeholder="${tr('ولا اكتب الأمر هنا…','ou écrivez la commande…')}" autocomplete="off"><button type="button" class="btn" data-vx="go" style="width:auto">➤</button></div>
     <div id="vx-res"></div></div>`;
   m.hidden=false;
   m.onclick=e=>{const b=e.target.closest('[data-vx]');if(e.target===m){e.stopPropagation();return vxClose()}if(!b)return;e.stopPropagation();vxBtn(b)};
@@ -6402,12 +6404,13 @@ const vxLang=()=>prefs.vlang||(isFr()?'fr-FR':'ar-DZ');const vxIsAr=()=>/^ar/.te
 function vxUI(on){const s=$('.vxsheet');if(s)s.classList.toggle('listening',!!on)}
 let vxSess=0;
 function vxListen(retry){if(!VX_SR)return;vxStop(true);VX.userStop=false;const id=++vxSess;let r;try{r=new VX_SR()}catch(_){return}
-  VX.rec=r;r.lang=vxLang();r.interimResults=true;r.maxAlternatives=3;r.continuous=false;let fin=null;const t0=Date.now();VX.interim='';VX.sending=false;clearTimeout(VX.silT);
+  VX.rec=r;r.lang=vxLang();r.interimResults=true;r.maxAlternatives=3;r.continuous=false;let fin=null;const t0=Date.now();VX.interim='';VX.sending=false;clearTimeout(VX.silT);VX.ev=[];const ev=k=>{VX.ev.push(k+' '+((Date.now()-t0)/1000).toFixed(1));const d=$('#vx-dbg');if(d)d.textContent='['+r.lang+'] '+VX.ev.join(' · ')};ev('go');
+  r.onstart=()=>ev('start');r.onaudiostart=()=>ev('mic✓');r.onsoundstart=()=>ev('صوت✓');r.onspeechstart=()=>ev('كلام✓');r.onspeechend=()=>{ev('سكت');if(VX.interim)setTimeout(()=>{if(id===vxSess&&VX.on)vxSend()},300)};r.onnomatch=()=>ev('nomatch');
   VX.on=true;vxUI(true);{const s=$('#vx-said');if(s)s.textContent=tr('راني نسمع… هدر دركا','J’écoute… parlez')}
-  r.onresult=e=>{if(id!==vxSess)return;let txt='';for(let i=0;i<e.results.length;i++)txt+=e.results[i][0].transcript;const s=$('#vx-said');if(s)s.textContent='«'+txt+'»';VX.interim=txt.trim();const inp=$('#vx-in');if(inp)inp.value=VX.interim;
+  r.onresult=e=>{if(id!==vxSess)return;ev('نص');let txt='';for(let i=0;i<e.results.length;i++)txt+=e.results[i][0].transcript;const s=$('#vx-said');if(s)s.textContent='«'+txt+'»';VX.interim=txt.trim();const inp=$('#vx-in');if(inp)inp.value=VX.interim;
     clearTimeout(VX.silT);VX.silT=setTimeout(()=>{if(id===vxSess&&VX.on&&VX.interim)vxSend()},1800);
     const last=e.results[e.results.length-1];if(last.isFinal){fin=[...last].map(a=>a.transcript);if(e.results.length>1)fin=[txt,...fin.slice(1)]}};
-  r.onerror=e=>{if(id!==vxSess)return;const k=e.error;
+  r.onerror=e=>{if(id!==vxSess)return;const k=e.error;ev('err:'+k);
     if(k==='aborted'&&VX.userStop)return;
     if((k==='aborted'||k==='audio-capture')&&!retry&&Date.now()-t0<2500){vxSess++;setTimeout(()=>vxListen(true),450);return}
     if(k==='language-not-supported'&&r.lang==='ar-DZ'){prefs.vlang='ar-SA';savePrefs();vxSess++;setTimeout(()=>vxListen(true),200);return}
@@ -6417,12 +6420,15 @@ function vxListen(retry){if(!VX_SR)return;vxStop(true);VX.userStop=false;const i
       :k==='no-speech'?tr('ما سمعت والو. اضغط على المايك وعاود.','Rien entendu. Réessayez.')
       :k==='aborted'||k==='audio-capture'?tr('المايك مشغول (ممكن تطبيق آخر يستعملو). سكّر التطبيقات الأخرى واضغط على المايك مرة أخرى.','Micro occupé. Réessayez.')
       :tr('ما خدمش المايك','Micro indisponible')+' ('+k+')'};
-  r.onend=()=>{if(id!==vxSess)return;clearTimeout(VX.silT);VX.on=false;vxUI(false);if(fin)vxHandle(fin);else if(VX.interim)vxHandle([VX.interim]);else if(VX.sending){const s=$('#vx-said');if(s)s.textContent=tr('ما سمعت والو. اضغط على المايك وعاود.','Rien entendu. Réessayez.')}};
+  r.onend=()=>{if(id!==vxSess)return;ev('end');clearTimeout(VX.silT);VX.on=false;vxUI(false);if(fin)vxHandle(fin);else if(VX.interim)vxHandle([VX.interim]);else vxNoText(r.lang)};
   try{r.start()}catch(e){VX.on=false;vxUI(false);if(!retry){vxSess++;setTimeout(()=>vxListen(true),450)}}}
-function vxSend(){const r=VX.rec;if(!r||!VX.on)return;VX.sending=true;clearTimeout(VX.silT);try{r.stop()}catch(_){}setTimeout(()=>{if(VX.rec===r&&VX.on){const t=VX.interim;vxStop(true);if(t)vxHandle([t])}},1500)}
+function vxSend(){const r=VX.rec;if(!r||!VX.on)return;VX.sending=true;clearTimeout(VX.silT);try{r.stop()}catch(_){}setTimeout(()=>{if(VX.rec===r&&VX.on){const t=VX.interim,lg=r.lang;vxStop(true);if(t)vxHandle([t]);else vxNoText(lg)}},1500)}
+function vxNoText(lg){const s=$('#vx-said');if(!s)return;const ar=/^ar/.test(lg||'');
+  if(ar&&lg==='ar-DZ'){prefs.vlang='ar-SA';savePrefs()}else if(ar&&lg==='ar-SA'){prefs.vlang='ar-DZ';savePrefs()}
+  s.innerHTML=`${tr('ما وصلني حتى كلام من المايك.','Aucune parole reçue.')}<br><small>${ar?tr('بدّلت طريقة السمع، اضغط على المايك وجرّب مرة أخرى.','Réessayez.'):''}</small><br><button type="button" class="btn ghost" data-vx="kbd" style="width:auto;margin-top:6px">⌨️🎤 ${tr('استعمل مايك الكلافيي','Utiliser le micro du clavier')}</button>`}
 function vxStop(user){clearTimeout(VX.silT);if(user)VX.userStop=true;vxSess++;try{if(VX.rec){const r=VX.rec;r.onend=null;r.onresult=null;r.onerror=null;r.abort()}}catch(_){}VX.rec=null;VX.on=false;vxUI(false)}
 function vxBtn(b){const k=b.dataset.vx;
-  if(k==='close')return vxClose();if(k==='mic'){if(VX.on)return vxSend();return vxListen()}if(k==='send')return vxSend();if(k==='cancel'){vxStop(true);const s=$('#vx-said');if(s)s.textContent=tr('تلغى. اضغط على المايك باش تعاود.','Annulé.');return}
+  if(k==='close')return vxClose();if(k==='mic'){if(VX.on)return vxSend();return vxListen()}if(k==='send')return vxSend();if(k==='kbd'){vxStop(true);const i=$('#vx-in');if(i){i.value='';i.focus()}const s=$('#vx-said');if(s)s.innerHTML=tr('اضغط على 🎤 اللي في الكلافيي تاع الهاتف وهدر، ومن بعد اضغط ➤','Touchez 🎤 sur le clavier, parlez, puis ➤');return}if(k==='cancel'){vxStop(true);const s=$('#vx-said');if(s)s.textContent=tr('تلغى. اضغط على المايك باش تعاود.','Annulé.');return}
   if(k==='lang'){prefs.vlang=b.dataset.v;savePrefs();document.querySelectorAll('[data-vx=lang]').forEach(x=>x.classList.toggle('on',x===b));return vxListen()}
   if(k==='go'){const i=$('#vx-in');const v=i&&i.value.trim();if(v){$('#vx-said').textContent='«'+v+'»';vxHandle([v])}return}
   if(k==='ex'){const i=$('#vx-in');if(i)i.value=b.dataset.t;$('#vx-said').textContent='«'+b.dataset.t+'»';return vxHandle([b.dataset.t])}
