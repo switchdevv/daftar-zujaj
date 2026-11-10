@@ -986,7 +986,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=84; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=85; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -1742,6 +1742,7 @@ function guideHTML(){const open=view.sec||'';
 function guidePrintHTML(){return `<div class="rc gprint"><div class="rc-head">${MARK}<div><b>Guessoum Glass</b><small>${tr('دليل الاستعمال','Guide d’utilisation')}</small></div></div>${guideList().map(g=>`<section><h3>${esc((isFr()?g.fr:g.ar).t)}</h3>${guideBody(g)}</section>`).join('')}</div>`}
 let debtShown=false;
 function heroHomeHTML(){let debt=0,debtors=0,late=0,lateAmt=0;for(const id in S.stats){const s=S.stats[id];if(s.bal>0){debt+=s.bal;debtors++;if(s.age>30){late++;lateAmt+=s.bal}}}
+  try{for(const p of Object.values(walkPeople()))if(p.owe>0.5)debt+=p.owe}catch(_){}
   return `<section class="hero">
     <div class="rowflex between" style="align-items:flex-start"><div><div class="lbl">${tr('مجموع الديون عند الزبائن','Total des crédits clients')}</div><div class="big dbt3" data-act="debt-tap">${debtShown?`<bdi dir="ltr">${grp(debt)}</bdi>`:'<span class="mask">★★★★★★</span>'} <small>${CUR()}</small></div></div></div>
     <div class="sub"><span><b><bdi dir="ltr">${debtors}</bdi></b> ${tr('حرفي عليه دين','ateliers débiteurs')}</span>${late?`<span class="pill">${ic('alert')}<bdi dir="ltr">${late}</bdi> ${tr('متأخرين +30 يوم','en retard +30 j')}${debtShown?` · <bdi dir="ltr">${grp(lateAmt)}</bdi> ${CUR()}`:''}</span>`:''}</div>
