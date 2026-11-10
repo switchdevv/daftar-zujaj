@@ -854,6 +854,33 @@ body.nav-mini nav.bottom button.main{transform:none}
 body.nav-mini nav.bottom button.main .ib{width:42px;height:42px;border-radius:15px}
 body.nav-mini nav.bottom button.on .ic{width:42px;height:28px;padding:4px 11px}
 html.noanim nav.bottom{transition:none}
+
+/* v74 voice */
+.iconbtn.micb{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 35%,var(--line))}
+.vxsheet{display:grid;gap:10px;max-height:88vh;overflow:auto}
+.vxtop{display:flex;align-items:center;gap:8px}.vxtop b{flex:1;font-size:1.05rem}
+.vxlang{display:flex;background:var(--sunk);border-radius:10px;padding:2px}.vxlang button{border:0;background:transparent;border-radius:8px;padding:5px 10px;font:inherit;font-weight:700;color:var(--muted)}.vxlang button.on{background:var(--surface);color:var(--accent);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+.vxmic{width:84px;height:84px;border-radius:50%;border:0;margin:6px auto 0;background:var(--accent);color:var(--accent-ink);display:grid;place-items:center;box-shadow:0 8px 22px color-mix(in srgb,var(--accent) 40%,transparent);cursor:pointer}
+.vxmic .ic{width:38px;height:38px}
+.vxsheet.listening .vxmic{animation:vxpulse 1.2s ease-out infinite}
+@keyframes vxpulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--accent) 45%,transparent)}100%{box-shadow:0 0 0 22px transparent}}
+.vxwave{display:flex;gap:4px;justify-content:center;height:22px;align-items:center;opacity:0;transition:opacity .2s}.vxsheet.listening .vxwave{opacity:1}
+.vxwave i{width:4px;height:6px;border-radius:2px;background:var(--accent);animation:vxw .9s ease-in-out infinite}.vxwave i:nth-child(2){animation-delay:.1s}.vxwave i:nth-child(3){animation-delay:.2s}.vxwave i:nth-child(4){animation-delay:.3s}.vxwave i:nth-child(5){animation-delay:.2s}.vxwave i:nth-child(6){animation-delay:.1s}
+@keyframes vxw{0%,100%{height:6px}50%{height:22px}}
+.vxsaid{background:var(--sunk);border-radius:14px;padding:10px 12px;font-size:.95rem;line-height:1.7;min-height:44px;text-align:center}
+.vxrow{display:flex;gap:6px}.vxrow input{flex:1;min-width:0}
+.vxcard{border:1px solid var(--line);border-radius:18px;padding:12px;display:grid;gap:8px;background:var(--surface)}
+.vxcard>b{font-size:1rem}.vxcard>b small{color:var(--muted);font-weight:400;font-size:.75rem}
+.vxcl{display:flex;align-items:center;gap:10px}.vxcl .av{width:38px;height:38px;border-radius:12px;background:var(--accent-soft);color:var(--accent);display:grid;place-items:center;font-weight:800}.vxcl>div{flex:1;display:grid}.vxcl small{color:var(--muted)}.vxcl .neg{color:var(--debt);font-weight:800}.vxcl .pos{color:var(--ok);font-weight:800}
+.vxkv{display:grid;grid-template-columns:1fr auto;gap:4px 10px;font-size:.88rem}.vxkv span{color:var(--muted)}
+.vxbig{font-size:1.8rem;font-weight:800;text-align:center;color:var(--accent)}
+.vxsts{display:grid;gap:6px}.vxst{display:flex;justify-content:space-between;gap:8px;align-items:baseline;background:var(--surface2);border-radius:12px;padding:9px 11px}.vxst b{font-size:1.02rem}.vxst small{color:var(--muted);font-weight:400}
+.vxmain .vxst{background:var(--accent-soft)}.vxmain .vxst b{font-size:1.35rem;color:var(--accent)}
+.vxbtns{display:flex;gap:6px;flex-wrap:wrap}.vxbtns .btn{flex:1;width:auto;min-width:0;text-decoration:none;text-align:center}
+.vxtbl{width:100%;border-collapse:collapse;font-size:.85rem}.vxtbl th{color:var(--muted);font-weight:400;text-align:start;padding:4px}.vxtbl td{padding:6px 4px;border-top:1px solid var(--line)}.vxtbl tr.t td{font-weight:800}
+.vxex{display:flex;flex-wrap:wrap;gap:6px}.vxex button{border:1px solid var(--line);background:var(--surface2);border-radius:99px;padding:6px 10px;font:inherit;font-size:.8rem;color:var(--ink)}
+.vxpick{display:grid;gap:6px}.vxpick button{border:1px solid var(--line);background:var(--surface2);border-radius:12px;padding:10px;font:inherit;font-weight:700;color:var(--ink);text-align:start}
+.note.warn{color:var(--warn)}
 </style>
 </head>
 <body>
@@ -908,7 +935,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=73; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=74; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6134,8 +6161,8 @@ let splashDone=false,splashTimer=null,welcomed=false;
 const CHIME='data:audio/mpeg;base64,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DEi9AbF4gQlzzsv+panNCLhYwBqgehcgiZommr9J0TYqjJAYWDwKQoYJXMzg/r////////6V///us6kbfxYcwECA5KocwiAIvYYogynWgEMO6oOegOFgHaZD9PSZkY//1Is5oSYnADFqGAbGgbWOAmCmIgbKOj8E//NixLod4gosAAdq6ERhyIGLBYAylg2EdxVNmf/UiiXiCgJAQGww+CgCJE2ZS/rUkiZEyIRAYEWwATCGZSRSIb/9mv//1MsKeMO+poYHgqe/0QYcgGCQFMVA2fZIAxTnA+KAAeBtfkPyupdejv/+v////1vG1LX6SJMbqcDtFJqBJiOp3Un1YkKCUwWAzGFKO1hBCl3pbTWdf//////zYsTSHroKKAAHaszjlTTLdhgTmbEkmLEquud////zyu0EFpOA2KBQFOnKKS3OB/Z7Pm/o/ZzWr///qqD4SnlykpfPl52xPwIycOBw+waUFDYFgEMKQ/a+lCYmqMT5qUAu0CH5XUrvh3///////1jVppS6QoATDNpOBBNXVLlLV5c7engsCTEIDMIcI22GlSv9KabHv6/v//O83MP/82DE5yFyBiAAB3jopiIOGckWmBG6TPPnf///vM6kbXIYbWgGfjJ4cpKeAD36Nbtz/3r/t/d+r99F/v//5llev0UHr9MBEAQ0JQshoHsKgAmAICQmMWhMTw1P+gHGgaajI69ylbF////3///7jVmo62QqAOSvOYzA+0aJz9E/UszpIfTUAQxjsKGAYPNVj0zW3r/5//+Ot8twIXz/82LE8CNqBiFgD3jozPkNCIE3kn8MN93/7+z/b0ibUFCeTLiuOQVKFshzRXqrd8V+P92nLUV/nmaiN3VY/L//+eP2bUOsSMCAdP1i2JhdQ4GBgjzpdUw9Ys+oBcSA5vZ+7WuvVh///65///63cm3QFQCYY2ZoMLqkf+Nyx25DnSO2FgkHFcwvujYwSXXGK+GeP95//+t5ZSl2goET//NixPIkegYcAA+65GgShYCxaz39f///545VYkqqYPYZoIAuNZ1SwEzb06zcXPdf/Xs0fv1+qmr+1y//Tys1qWGk5TAcOD810QcKSq5huIBcYEAWYb1afTBaEAM4trGmsvVz//+/+P//87Yl7+ISzHFDOWglER34bhhRfCvKHTEQqIh0Y1nQDYiUcIt3u5d1r//9dxqzTYSUUGMU+v/zYsTwIpIGHAAPeOjyjtzPPDv9//w3cuwYlOKRkwIC3gldu9PcACx+7+U3Nvf7PUAFTidfr9+LJ07IykxBqjU4AX6yz7LYffret5TLxCgVPETZHGJGHgfDiyTAOjPAA1r1LrncSk3/7uznh6AwcBwYpRgFczODdNVqLISBAsoAoPAtdRbiqbIu3/0yYC9YGRRkKXLiaDf20zAcsAD/82DE9STiChgAD3joLoDRbIIbpoGaP/suZ/2fr5pT3OcjUhk4/AMI2tiXk6L1rcH/8u1a1DBidoqIhxPYoFAKKGL4NIAhEBpgHxZxwGqVUA1LFqxHr38//////3hasyp/UejEzoOVgRSMnuzSyZfutERkQFlDFrzOoAlJJ+ZdZy3/f3/55Y97Zk6cJuADlAIhd7PPWP///f7y/RP/82LE7h+yCi4kDyro5mIAiTT9oEvr1HxD76arnpFNB5H2syWNVbr7te+r793fL65MQU1FMy4xMDCqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqtE6YICAff1y0vFpf0z6zgrIGWvFmH1NCmEvoFoJxdt2//9ZkDRECgpHr8pEQBNKChlIupI///NixP8kcgYYAA946PWqjWRwDGbN//0gtQG9Ot/rvm1qbq/6Vb9319iL3ZRqKhBJaSYmpJiSj+ISQohI9I3h8jCHKO4XUaQ2RoiQCLh+BnhDAbYKQA3Lxg4AA4FhAUCBWGEQmPxqJ1h04BR0McgQGBkx6Nwr/zMwkIiIlG5LKXWjMBRGaobl2v386lPKI2/juNPWoiOGBQyWcgUnhf/zYsTFFVHyUh4NIPSCqFyay1WXNddZ0WfLCGFAYYLcpQUGWOnKonHJuUVK+GfPzsS+LyB70rTAIWKwWrS0JvXVfqHYejMalMqlMzNWXQR4HDYTB+jq7wm7FPYt2Ldu9fvX71qzftWcscscscrhKqIGQwMDVELLLLIkQNVXammmJUtoftVVVL2T+X+8S2f7cstrSL+VQAkbUvPyQQL/82DE/z2aaigLT+AB1fmQNot/e1c7T5VTsp//QzV0YQAQCxFsn/4OOz1KEDQZi4TCQCCDgmyH//y8RhgALBRgQA1BImEPrFFzf//6RDcUf1ooVmBHAsURJ3oJ65KwS0v////MdF2JBAem4GACwSODO0DFvJywC4rxYxJyoC//////ZGtdVMwcaZG9snllNGMYxQyJwYi/MBZf+9X/82LElznjujQRidgBNla////////+L0sv1F6CKU0Y3LLsvpZfq7rdLjZub1TZWt63S///////////L6CWU0sxllWX0sv7L7kstRjksqy/GzreqbVret0u7Ot6ptFVTEFNRTMuMTAwVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV//NixD8AAANIAcAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVQ==';
 function welcomeSound(){if(welcomed||prefs.sound===false||prefs.anim===false)return;welcomed=true;window.ggWelcomed=Date.now();
   try{const a=new Audio(CHIME);a.volume=.9;const p=a.play();if(p&&p.catch)p.catch(()=>{});}catch(_){}
-  setTimeout(()=>{try{if(!('speechSynthesis' in window))return;const u=new SpeechSynthesisUtterance('Welcome back');u.lang='en-US';u.rate=.95;u.pitch=1.05;u.volume=1;
-    const pick=()=>{const vs=speechSynthesis.getVoices().filter(v=>/^en/i.test(v.lang));const v=vs.find(v=>/female|samantha|zira|google us/i.test(v.name))||vs[0];if(v)u.voice=v;speechSynthesis.speak(u)};
+  setTimeout(()=>{try{if(!('speechSynthesis' in window))return;const u=new SpeechSynthesisUtterance('واش راكم');u.lang='ar-SA';u.rate=.95;u.pitch=1.05;u.volume=1;
+    const pick=()=>{const vs=speechSynthesis.getVoices().filter(v=>/^ar/i.test(v.lang));const v=vs.find(v=>/google/i.test(v.name))||vs[0];if(v)u.voice=v;speechSynthesis.speak(u)};
     if(speechSynthesis.getVoices().length)pick();else speechSynthesis.onvoiceschanged=()=>{speechSynthesis.onvoiceschanged=null;pick()}}catch(_){}},700)}
 function splashHold(){if(splashDone||prefs.anim===false)return false;const b=$('#boot');if(!b||b.hidden)return false;if(sessionStorage.getItem('gg-splashed')){splashDone=true;return false}
   const left=SPLASH_MIN-(performance.now()-SPLASH_T0);if(left<=0)return false;welcomeSound();
@@ -6196,6 +6223,252 @@ window.addEventListener('scroll',()=>{const y=window.scrollY||0,d=y-nmY;nmY=y;co
   if((d>0&&nmAcc<0)||(d<0&&nmAcc>0))nmAcc=0;nmAcc+=d;
   if(nmAcc>12)B.classList.add('nav-mini');else if(nmAcc<-8)B.classList.remove('nav-mini')},{passive:true});
 {const _g=go;go=function(n,a){document.body.classList.remove('nav-mini');nmAcc=0;return _g(n,a)}}
+
+/* ---- v74: 🎙️ الأوامر الصوتية ---- */
+ICONS.mic='<rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3M8 21h8"/>';
+const VX_SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+const VX={rec:null,on:false,pending:null,said:'',lastRes:null};
+/* ---------- تطبيع النص والأرقام ---------- */
+function vxNorm(s){s=String(s||'').toLowerCase();
+  s=s.replace(/[ً-ْـٰ]/g,'').replace(/[أإآٱ]/g,'ا').replace(/ة/g,'ه').replace(/ى/g,'ي').replace(/ؤ/g,'و').replace(/ئ/g,'ي');
+  s=s.replace(/[٠-٩]/g,d=>'٠١٢٣٤٥٦٧٨٩'.indexOf(d)).replace(/[۰-۹]/g,d=>'۰۱۲۳۴۵۶۷۸۹'.indexOf(d));
+  s=s.replace(/(\d)[٫,](\d)/g,'$1.$2').replace(/(\d)\s*[x×*]\s*(\d)/g,'$1 على $2');
+  s=s.replace(/([^\s\d.])(\d)/g,'$1 $2').replace(/(\d)([^\s\d.])/g,'$1 $2');
+  s=s.replace(/(^|[^\d])\.|\.(?!\d)/g,'$1 ').replace(/[؟?!،,;:«»"'()\[\]\-_/\\]+/g,' ');
+  return s.replace(/\s+/g,' ').trim()}
+const VX_U={'صفر':0,'zero':0,'واحد':1,'وحده':1,'وحد':1,'اثنين':2,'اثنان':2,'اتنين':2,'زوج':2,'جوج':2,'قطعتين':2,'حبتين':2,'مرتين':2,'لوحين':2,'ثلاثه':3,'تلاته':3,'ثلاث':3,'تلاث':3,'تلت':3,'اربعه':4,'اربع':4,'ربعه':4,'خمسه':5,'خمس':5,'سته':6,'سبعه':7,'سبع':7,'ثمانيه':8,'ثمانيه':8,'تمنيه':8,'ثمنيه':8,'تمانيه':8,'تسعه':9,'تسع':9,'عشره':10,'عشر':10,
+  'حداش':11,'احداش':11,'احدعش':11,'احدعشر':11,'اطناش':12,'طناش':12,'ثناش':12,'اثناش':12,'اثناعش':12,'اثناعشر':12,'تلطاش':13,'ثلطاش':13,'تلتطاش':13,'ثلاثطاش':13,'ربعطاش':14,'اربعطاش':14,'خمسطاش':15,'خمسطعش':15,'سطاش':16,'ستاش':16,'سبعطاش':17,'تمنطاش':18,'ثمنطاش':18,'تسعطاش':19,
+  'عشرين':20,'ثلاثين':30,'تلاتين':30,'تلتين':30,'اربعين':40,'خمسين':50,'ستين':60,'سبعين':70,'ثمانين':80,'تمانين':80,'تمنين':80,'تسعين':90,
+  'ميه':100,'مائه':100,'ميتين':200,'مئتين':200,'ثلاثميه':300,'تلتميه':300,'تلاثميه':300,'ربعميه':400,'اربعميه':400,'خمسميه':500,'ستميه':600,'سبعميه':700,'ثمنميه':800,'تمنميه':800,'ثمانميه':800,'تسعميه':900,'الف':1000,'الفين':2000,'مليون':10000,
+  'un':1,'une':1,'deux':2,'trois':3,'quatre':4,'cinq':5,'six':6,'sept':7,'huit':8,'neuf':9,'dix':10,'onze':11,'douze':12,'treize':13,'quatorze':14,'quinze':15,'seize':16,'vingt':20,'trente':30,'quarante':40,'cinquante':50,'soixante':60,'cent':100,'cents':100,'mille':1000,'million':10000,'millions':10000};
+const VX_MUL={'الاف':1000,'الف':1000,'مليون':10000,'ملاين':10000,'ملايين':10000,'million':10000,'millions':10000,'mille':1000,'ميه':100,'cent':100,'cents':100};
+function vxNumWord(t){if(/^\d+(\.\d+)?$/.test(t))return{v:+t,digit:true};
+  if(t in VX_U)return{v:VX_U[t]};if(t in VX_MUL)return{v:VX_MUL[t],mulOnly:!(t in VX_U)};
+  if(t.length>2&&t[0]==='و'){const r=t.slice(1);if(r in VX_U)return{v:VX_U[r],conn:true};if(r in VX_MUL)return{v:VX_MUL[r],conn:true}}return null}
+function vxTokens(s){const raw=s.split(' ').filter(Boolean),out=[];let i=0;
+  while(i<raw.length){const f=vxNumWord(raw[i]);if(!f||(f.mulOnly)){out.push({w:raw[i]});i++;continue}
+    let total=0,cur=0,last=null,j=i;
+    while(j<raw.length){const tk=raw[j];
+      if(last!==null&&(tk==='ونص'||tk==='نص'||tk==='demi'||tk==='ونصف')){cur+=0.5;j++;continue}
+      if(last!==null&&(tk==='و'||tk==='et')&&j+1<raw.length){const nx=vxNumWord(raw[j+1]);if(nx&&!nx.digit){j++;continue}break}
+      const nv=vxNumWord(tk);if(!nv)break;
+      const isMul=last!==null&&(tk in VX_MUL||(tk.length>2&&tk[0]==='و'&&tk.slice(1) in VX_MUL&&false));
+      if(last!==null&&!isMul){if(nv.digit)break;if(!(nv.conn||(last>=100&&nv.v<last)||(raw[j-1]==='و')))break}
+      if(isMul){cur=(cur||1)*VX_MUL[tk];if(VX_MUL[tk]>=1000){total+=cur;cur=0}}else cur+=nv.v;
+      last=nv.v;j++}
+    out.push({n:Math.round((total+cur)*100)/100,raw:raw.slice(i,j).join(' ')});i=j}
+  return out}
+/* ---------- مطابقة الكلمات ---------- */
+function vxLev(a,b){if(a===b)return 0;const m=a.length,n=b.length;if(Math.abs(m-n)>2)return 9;let p=[...Array(n+1).keys()];for(let i=1;i<=m;i++){const c=[i];for(let j=1;j<=n;j++)c[j]=Math.min(p[j]+1,c[j-1]+1,p[j-1]+(a[i-1]===b[j-1]?0:1));p=c}return p[n]}
+function vxEq(a,b){if(!a||!b)return false;if(a===b)return true;const L=Math.min(a.length,b.length);if(L>=4&&vxLev(a,b)<=1)return true;if(L>=7&&vxLev(a,b)<=2)return true;return false}
+function vxVars(w){const c=[w];for(const p of ['لل','ال','ل','و','ب','ف','وال','بال','فال','عل'])if(w.startsWith(p)&&w.length-p.length>=3)c.push(w.slice(p.length));return c}
+const vxHas=(words,list)=>words.some(w=>vxVars(w).some(v=>list.includes(v)));
+const VX_STOP=new Set(['بن','ben','ولد','ورشه','atelier','مول','عمي','سي','الحاج','حاج','ال']);
+const VX_LET={'اي':'a','ايه':'a','بي':'b','سي':'c','دي':'d','اف':'f','جي':'g','اتش':'h','اش':'h','كي':'k','كا':'k','ام':'m','ان':'n','او':'o','ار':'r','اس':'s','تي':'t','في':'v','واي':'y','زد':'z','زاد':'z','اكس':'x'};
+const vxKey=w=>String(w).replace(/p/g,'b').replace(/v/g,'f');
+function vxLetters(words){const out=[];let i=0;while(i<words.length){if(VX_LET[words[i]]&&i+1<words.length&&VX_LET[words[i+1]]){let s='';const st=i;while(i<words.length&&VX_LET[words[i]]){s+=VX_LET[words[i]];i++}out.push({w:s,span:i-st});continue}out.push({w:words[i],span:1});i++}return out}
+const VX_AS={'ب':'b','ت':'t','ث':'t','ج':'j','ح':'','خ':'k','د':'d','ذ':'d','ر':'r','ز':'z','س':'s','ش':'s','ص':'s','ض':'d','ط':'t','ظ':'d','ع':'','غ':'g','ف':'f','ق':'k','ك':'k','ل':'l','م':'m','ن':'n','ه':'','و':'','ي':'','ا':''};
+function vxSkel(w){w=String(w||'');let r='';if(/[a-z]/.test(w)){w=w.replace(/ch|sh/g,'s').replace(/kh/g,'k').replace(/gh/g,'g').replace(/dj/g,'j').replace(/q|c(?=[aou])|ck/g,'k').replace(/c/g,'s').replace(/x/g,'ks').replace(/p/g,'b').replace(/v/g,'f').replace(/[aeiouyhw]/g,'');r=w}else{for(const ch of w)r+=VX_AS[ch]??''}return r.replace(/(.)\1+/g,'$1')}
+const vxNameEq=(a,b)=>{if(vxEq(a,b))return true;if(/[a-z]/.test(a)!==/[a-z]/.test(b)){const x=vxSkel(a),y=vxSkel(b);return x.length>=3&&x===y}return false};
+function vxFindClient(words,excl){let best=[];const W=words.filter(w=>!(excl&&excl.has(w)));
+  for(const [id,c] of Object.entries(S.clients)){let sc=0;for(const field of [c.name,c.owner]){if(!field)continue;const nw=vxNorm(field).split(' ').filter(t=>t.length>1&&!VX_STOP.has(t)&&!/^\d+$/.test(t));if(!nw.length)continue;
+      let hit=0;for(const t of nw)if(W.some(w=>vxVars(w).some(v=>vxVars(t).some(u=>vxNameEq(v,u)))))hit++;
+      const s=hit?hit/nw.length+hit*0.05:0;if(s>sc)sc=s}
+    if(sc>=0.5)best.push({id,sc})}
+  best.sort((a,b)=>b.sc-a.sc);if(!best.length)return null;const top=best.filter(x=>Math.abs(x.sc-best[0].sc)<0.001);return{id:best[0].id,amb:top.length>1?top.map(x=>x.id):null}}
+/* ---------- الزجاج والقياسات ---------- */
+const VX_SEP=new Set(['على','علي','في','ف','x','sur','par','fois','ضرب','بي']);
+const VX_QW=new Set(['قطع','قطعه','قطعات','حبه','حبات','حبات','لوح','الواح','pieces','piece','plaques','plaque','fois','مرات','مره','نسخ']);
+function vxTypeMentions(toks){const tl=[];for(const t of activeTypes()){const nw=vxNorm(t.name).split(' ').filter(Boolean);const letters=nw.filter(x=>!/^\d+(\.\d+)?$/.test(x)&&!['مم','ملم','mm','ميلي','ملي'].includes(x)),nums=nw.filter(x=>/^\d+(\.\d+)?$/.test(x)).map(Number);if(letters.length)tl.push({t,letters,nums})}
+  const words=toks.map(x=>x.w||null);const M=[];
+  for(let p=0;p<toks.length;p++){if(!toks[p].w)continue;let bestM=null;
+    for(const T of tl){const first=T.letters[0];const ok=vxVars(toks[p].w).some(v=>vxEq(v,first)||vxKey(v)===vxKey(first));if(!ok)continue;
+      let end=p+1,mk=1;for(let k=1;k<T.letters.length;k++){let f=false;for(let q=end;q<Math.min(toks.length,end+3);q++)if(toks[q].w&&vxVars(toks[q].w).some(v=>vxEq(v,T.letters[k]))){end=q+1;f=true;mk++;break}if(!f)break}
+      let numOk=0;if(T.nums.length){for(let q=end;q<Math.min(toks.length,end+2);q++){if(toks[q].n!==undefined&&T.nums.includes(toks[q].n)){numOk=1;end=q+1;if(toks[end]&&toks[end].w&&['مم','ملم','mm','ميلي','ملي'].includes(toks[end].w))end++;break}if(toks[q].w&&!['مم','ملم','mm','ميلي','ملي'].includes(toks[q].w))break}}
+      const sc=mk/T.letters.length*2+numOk*1.5-(T.nums.length&&!numOk?0.5:0);if(mk<Math.min(T.letters.length,2)&&T.letters.length>1)continue;
+      if(!bestM||sc>bestM.sc)bestM={pos:p,end,id:T.t.id,sc}}
+    if(bestM){M.push(bestM);p=bestM.end-1}}
+  return M}
+function vxPreMark(lw){const T=[];for(const t of activeTypes()){const nw=vxNorm(t.name).split(' ').filter(Boolean);const L=nw.filter(x=>!/^\d+(\.\d+)?$/.test(x)&&!['مم','ملم','mm','ميلي','ملي'].includes(x)),N=nw.filter(x=>/^\d+(\.\d+)?$/.test(x)).map(Number);if(L.length&&N.length)T.push({L,N})}
+  const out=[];for(let i=0;i<lw.length;i++){out.push(lw[i]);for(const t of T){if(!vxVars(lw[i]).some(v=>vxEq(v,t.L[t.L.length-1])||vxKey(v)===vxKey(t.L[t.L.length-1])))continue;const nx=lw[i+1];if(nx===undefined)break;const nv=vxNumWord(nx);if(nv&&!nv.digit&&t.N.includes(nv.v)){out.push(String(nv.v));i++;if(['مم','ملم','mm','ميلي','ملي'].includes(lw[i+1])){out.push(lw[i+1]);i++}out.push('|');}else if(nv&&nv.digit&&t.N.includes(nv.v)){out.push(nx);i++;if(['مم','ملم','mm','ميلي','ملي'].includes(lw[i+1])){out.push(lw[i+1]);i++}out.push('|')}break}}return out}
+function vxLines(text){const words=vxNorm(text).split(' ').filter(Boolean);const lw=vxPreMark(vxLetters(words).map(x=>x.w));const toks=vxTokens(lw.join(' '));
+  const ments=vxTypeMentions(toks);const inM=i=>ments.some(m=>i>=m.pos&&i<m.end);const dims=[];
+  for(let i=0;i+2<toks.length;i++){if(inM(i))continue;if(toks[i].n!==undefined&&toks[i+1].w&&VX_SEP.has(toks[i+1].w)&&toks[i+2].n!==undefined&&!inM(i+2)){dims.push({s:i,e:i+3,w:toks[i].n,h:toks[i+2].n});i+=2}}
+  for(let i=0;i<toks.length;i++){if(toks[i].w&&['عرض','العرض','largeur','large'].includes(toks[i].w)&&toks[i+1]&&toks[i+1].n!==undefined){for(let j=i+2;j<Math.min(toks.length,i+6);j++)if(toks[j].w&&['طول','الطول','hauteur','longueur','haut','long'].includes(toks[j].w)&&toks[j+1]&&toks[j+1].n!==undefined&&!dims.some(d=>d.s<=i+1&&d.e>i+1)){dims.push({s:i,e:j+2,w:toks[i+1].n,h:toks[j+1].n});break}}}
+  dims.sort((a,b)=>a.s-b.s);const lines=[];let lastType=null;
+  dims.forEach((d,k)=>{const prevEnd=k?dims[k-1].e:0,nextStart=k+1<dims.length?dims[k+1].s:toks.length;
+    const m=[...ments].filter(x=>x.pos<d.s&&x.pos>=(k?dims[k-1].e:0)).pop()||[...ments].filter(x=>x.pos<d.s).pop();const typeId=(m&&m.id)||lastType||(activeTypes()[0]||{}).id;lastType=typeId;
+    let qty=null;const nm=ments.find(x=>x.pos>=d.e&&x.pos<nextStart),lim=nm?nm.pos:nextStart;
+    for(let j=d.e;j<lim;j++){if(toks[j].n!==undefined&&!inM(j)){if(toks[j].n>0&&toks[j].n<1000){qty=toks[j].n;break}}}
+    if(qty===null&&d.s-1>=prevEnd&&toks[d.s-1]&&toks[d.s-1].n!==undefined&&!inM(d.s-1)&&toks[d.s-1].n<100)qty=toks[d.s-1].n;
+    lines.push({typeId,w:d.w,h:d.h,qty:Math.max(1,Math.round(qty||1))})});
+  return{lines,ments,toks}}
+/* ---------- الفترات والأرقام ---------- */
+function vxPeriod(words){const td=today(),D=s=>new Date(s+'T12:00:00');const has=l=>vxHas(words,l);
+  if(has(['البارح','لبارح','البارحه','امس','hier']))return{f:(()=>{const d=D(td);d.setDate(d.getDate()-1);return dstr(d)})(),t:(()=>{const d=D(td);d.setDate(d.getDate()-1);return dstr(d)})(),l:tr('البارح','Hier')};
+  if((has(['الشهر','شهر','mois']))&&has(['فات','الماضي','اللي','dernier','precedent','passe'])){const d=D(td);d.setDate(1);d.setMonth(d.getMonth()-1);const f=dstr(d);const e=D(td);e.setDate(0);return{f,t:dstr(e),l:tr('الشهر اللي فات','Mois dernier')}}
+  if(has(['الشهر','شهر','mois']))return{f:td.slice(0,8)+'01',t:td,l:tr('هاد الشهر','Ce mois')};
+  if(has(['السمانه','سمانه','الاسبوع','اسبوع','الجمعه','semaine']))return{f:(()=>{const d=D(td);d.setDate(d.getDate()-6);return dstr(d)})(),t:td,l:tr('آخر 7 أيام','7 derniers jours')};
+  if(has(['العام','السنه','عام','سنه','annee']))return{f:td.slice(0,5)+'01-01',t:td,l:tr('هاد العام','Cette année')};
+  if(has(['اليوم','ليوم','لنهار','النهار','نهار','اليومه','aujourd','aujourdhui','today','journee']))return{f:td,t:td,l:tr('اليوم','Aujourd’hui')};
+  return null}
+function vxStats(f,t){let sales=0,m=0,u=0,paid=0,debt=0;for(const r of dbData(f,t)){sales+=r.sales;m+=r.m;u+=r.u;paid+=r.paid;debt+=r.debt}
+  const nb=Object.values(S.bons).filter(b=>b.kind!=='opening'&&b.date>=f&&b.date<=t).length,exp=expSum(f,t);let fg=0;try{fg=fgSum(f,t)}catch(_){}
+  let total=0,dn=0;for(const id in S.stats){const b=num(S.stats[id].bal);if(b>0.5){total+=b;dn++}}
+  return{sales,m,u,paid,debt,nb,exp,fg,net:m-exp-fg,total,dn}}
+const vxDA=v=>`${grp(Math.round(v))} ${CUR()}`,vxSp=v=>`${Math.round(v)} ${tr('دينار','dinars')}`;
+/* ---------- الصوت ---------- */
+function vxSay(text){if(prefs.sound===false||!('speechSynthesis' in window)||!text)return;try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(text);const ar=!isFr();u.lang=ar?'ar-SA':'fr-FR';u.rate=1;
+  const vs=speechSynthesis.getVoices().filter(v=>ar?/^ar/i.test(v.lang):/^fr/i.test(v.lang));if(vs.length)u.voice=vs.find(v=>/google/i.test(v.name))||vs[0];speechSynthesis.speak(u)}catch(_){}}
+/* ---------- فهم الأمر ---------- */
+const VX_K={
+  inv:['فاتوره','فاكتوره','الفاتوره','بون','facture','bon','فتوره'],
+  pay:['فارسمو','فرسمو','فيرسمو','versement','دفع','دفعلي','خلص','خلصني','خلصلي','سلك','عطاني','جاب','paiement','paye','payer','verse','دفعه','خلاص'],
+  ask:['شحال','قداش','كم','قديش','combien','باقي','عليه','عندو','doit','حساب','الحساب','compte','solde','reste','بقاله','بقالو'],
+  sales:['مبيعات','المبيعات','بعت','بعنا','بيع','البيع','ventes','vente','chiffre','بعتو','خدمنا','الخدمه','الشيفر'],
+  profit:['فايده','الفايده','فائده','الفائده','ربح','الربح','ربحت','ارباح','الارباح','benefice','benefices','marge','gain','gagne','ربحنا','الصافي'],
+  debt:['دين','الدين','ديون','الديون','كريدي','الكريدي','credit','credits','dette','dettes','كريديات'],
+  coll:['فارسمو','دخل','دخلت','الدخل','تحصيل','حصلت','حصلنا','خلصو','encaisse','encaissement','encaissements','versements','recette','recettes'],
+  exp:['مصاريف','المصاريف','مصروف','المصروف','depenses','depense','charges'],
+  cash:['الصندوق','صندوق','كاسه','الكاسه','caisse','الدراهم'],
+  open:['حل','افتح','حللي','حلي','ادخل','روح','افتحلي','ouvre','ouvrir','va','aller'],
+  show:['وريني','ورينا','اعرض','affiche','montre','عطيني','اعطيني'],
+  back:['رجوع','ارجع','رجع','retour','arriere'],
+  home:['الرئيسيه','رئيسيه','الاستقبال','accueil','home'],
+  search:['ابحث','دور','فتش','بحث','cherche','chercher','recherche','trouve'],
+  yes:['احفظ','سجل','ايه','نعم','واه','اه','oui','valide','valider','ok','اوكي','اكد','confirme','enregistre','يزي','صح','مليح','ايوا','ايوه'],
+  no:['لا','الغي','الغيه','بطل','annule','annuler','non','خلاص','ماشي'],
+  edit:['عدل','بدل','صلح','modifie','modifier','corrige'],
+  help:['مساعده','عاوني','aide','help','الاوامر','commandes','واش تقدر','تقدر دير'],
+  hi:['واش راك','وش راك','السلام','سلام','صباح الخير','مساء الخير','bonjour','salut','واش راكم','وش راكم','مرحبا','اهلا'],
+  thx:['شكرا','صحيت','يعطيك الصحه','merci','بارك الله']};
+function vxPhrase(text,list){const n=' '+vxNorm(text)+' ';return list.some(p=>n.includes(' '+vxNorm(p)+' '))}
+function vxPageMatch(words){let best=null;const extra=[['nav-home',['الرئيسيه','رئيسيه','accueil']],['nav-more',['المزيد','plus']],['nav-set',['الاعدادات','اعدادات','الاعداد','reglages','parametres','settings']],['nav-bon',['فاتوره جديده','nouvelle facture']],['nav-search',['البحث','recherche']]];
+  for(const [act,kw] of extra)for(const k of kw){const kk=vxNorm(k).split(' ');if(kk.every(t=>words.some(w=>vxVars(w).some(v=>vxEq(v,t)))))if(!best||kk.length+1>best.sc)best={act,sc:kk.length+1}}
+  for(const p of SEARCH_PAGES){if(isStaff()&&STAFF_BLOCK.has(p[0]))continue;const kws=vxNorm(p[2]+' '+p[3]+' '+p[4]).split(' ').filter(t=>t.length>2);let sc=0;for(const t of new Set(kws))if(words.some(w=>vxVars(w).some(v=>vxEq(v,t))))sc++;if(sc&&(!best||sc>best.sc))best={act:p[0],sc}}
+  return best}
+function vxParse(text){const N=vxNorm(text),words=N.split(' ').filter(Boolean),has=k=>vxHas(words,VX_K[k]),ph=k=>vxPhrase(text,VX_K[k]);
+  if(!words.length)return{k:'none'};
+  if(VX.pending){if(has('yes'))return{k:'yes'};if(has('edit'))return{k:'edit'};if(has('no')&&words.length<=3)return{k:'no'}}
+  if(ph('hi')&&words.length<=4)return{k:'hi'};if(ph('thx')&&words.length<=4)return{k:'thx'};
+  if(ph('help'))return{k:'help'};
+  if(vxHas(words,['اللغه','لغه','langue'])||(vxHas(words,['بدل','change','mets','حط','دير'])&&vxHas(words,['فرنسيه','francais','بالفرنسيه','عربيه','بالعربيه','arabe'])))return{k:'lang',v:vxHas(words,['فرنسيه','francais','بالفرنسيه','français'])?'fr':vxHas(words,['عربيه','بالعربيه','arabe'])?'ar':(isFr()?'ar':'fr')};
+  if(vxHas(words,['الليلي','ليلي','الداكن','داكن','sombre','nuit','dark','الظلام']))return{k:'theme',v:'dark'};
+  if(vxHas(words,['النهاري','نهاري','الفاتح','فاتح','clair','jour','light'])&&vxHas(words,['الوضع','mode','theme','الشكل','دير','حط']))return{k:'theme',v:'light'};
+  if(vxHas(words,['الصوت','son','sons','الاصوات'])&&vxHas(words,['طفي','اطفي','سكت','coupe','couper','desactive']))return{k:'snd',v:'off'};
+  if(vxHas(words,['الصوت','son','sons','الاصوات'])&&vxHas(words,['شعل','ارجع','active','activer','حل']))return{k:'snd',v:'on'};
+  if(has('back')&&words.length<=3)return{k:'back'};
+  const cl=vxFindClient(words);
+  const walk=vxPhrase(text,['زبون عادي','client comptoir','particulier','زبون جديد']);
+  const L=vxLines(text);
+  if(has('inv')||(L.lines.length&&!has('pay')))return{k:'inv',cl,walk,lines:L.lines};
+  const nums=L.toks.filter(t=>t.n!==undefined).map(t=>t.n);
+  if(has('pay')&&((cl&&nums.length)||(!vxPeriod(words)&&(cl||nums.length)))){const amt=nums.length?Math.max(...nums):0;const meth=vxHas(words,['شيك','cheque','chèque'])?'cheque':vxHas(words,['تحويل','virement'])?'transfer':vxHas(words,['ccp','بريدي','baridimob','بريد'])?'ccp':'cash';return{k:'pay',cl,amt,meth}}
+  if(cl&&(has('ask')||has('show')||words.length<=3&&!has('open')))return{k:'client',cl};
+  const per=vxPeriod(words),met=has('profit')?'profit':has('sales')?'sales':has('exp')?'exp':has('cash')?'cash':has('coll')?'coll':has('debt')?'debt':null;
+  const pg=vxPageMatch(words);
+  if(has('open')&&pg&&!per)return{k:'nav',act:pg.act};
+  if(has('show')&&pg&&!per&&!met)return{k:'nav',act:pg.act};
+  if(cl&&has('open'))return{k:'openc',cl};
+  if(met||per)return{k:'stats',met:met||'all',per:per||{f:met==='debt'?'0000-01-01':today(),t:today(),l:met==='debt'?tr('دركا','Maintenant'):tr('اليوم','Aujourd’hui'),now:met==='debt'}};
+  if(has('search')){const rest=words.filter(w=>!VX_K.search.includes(w)&&!['على','عل','sur','le','la','les','un','une'].includes(w)).join(' ');return{k:'search',q:rest}}
+  if(pg&&pg.sc>=1)return{k:'nav',act:pg.act};
+  if(cl)return{k:'client',cl};
+  return{k:'none'}}
+/* ---------- الواجهة ---------- */
+function vxOpen(){if(!$('#shell')||$('#shell').hidden)return;const m=$('#modal');VX.pending=null;
+  m.innerHTML=`<div class="sheet vxsheet" role="dialog" aria-modal="true"><div class="vxtop"><b>🎙️ ${tr('الأوامر الصوتية','Commandes vocales')}</b><span class="vxlang">${['ar-DZ','fr-FR'].map(l=>`<button type="button" data-vx="lang" data-v="${l}" class="${vxLang()===l?'on':''}">${l==='ar-DZ'?'ع':'Fr'}</button>`).join('')}</span><button type="button" class="fsx" data-vx="close">✕</button></div>
+    ${VX_SR?`<button type="button" class="vxmic" data-vx="mic" aria-label="${tr('اضغط وهدر','Appuyez et parlez')}"><svg class="ic" viewBox="0 0 24 24">${ICONS.mic}</svg></button><div class="vxwave"><i></i><i></i><i></i><i></i><i></i><i></i><i></i></div>`:`<p class="note" style="text-align:center">${tr('المايك يخدم في Chrome. تقدر تكتب الأمر هنا.','Le micro fonctionne dans Chrome. Vous pouvez écrire la commande.')}</p>`}
+    <div class="vxsaid" id="vx-said">${tr('اضغط على المايك وقول واش تحب…','Touchez le micro et parlez…')}</div>
+    <div class="vxrow"><input id="vx-in" placeholder="${tr('ولا اكتب الأمر هنا…','ou écrivez la commande…')}" autocomplete="off"><button type="button" class="btn" data-vx="go" style="width:auto">➤</button></div>
+    <div id="vx-res"></div></div>`;
+  m.hidden=false;
+  m.onclick=e=>{const b=e.target.closest('[data-vx]');if(e.target===m){e.stopPropagation();return vxClose()}if(!b)return;e.stopPropagation();vxBtn(b)};
+  m.onkeydown=e=>{if(e.target.id==='vx-in'&&e.key==='Enter'){e.preventDefault();const v=e.target.value.trim();if(v){$('#vx-said').textContent='«'+v+'»';vxHandle([v])}}};
+  if(VX_SR)setTimeout(vxListen,250)}
+function vxClose(){vxStop();const m=$('#modal');m.hidden=true;m.innerHTML='';m.onclick=null;m.onkeydown=null;VX.pending=null}
+const vxLang=()=>prefs.vlang||(isFr()?'fr-FR':'ar-DZ');
+function vxUI(on){const s=$('.vxsheet');if(s)s.classList.toggle('listening',!!on)}
+function vxListen(){if(!VX_SR)return;vxStop();try{const r=new VX_SR();VX.rec=r;r.lang=vxLang();r.interimResults=true;r.maxAlternatives=3;r.continuous=false;let fin=null;
+  r.onstart=()=>{VX.on=true;vxUI(true);const s=$('#vx-said');if(s)s.textContent=tr('راني نسمع…','J’écoute…')};
+  r.onresult=e=>{let txt='';for(let i=0;i<e.results.length;i++){txt+=e.results[i][0].transcript}const s=$('#vx-said');if(s)s.textContent='«'+txt+'»';
+    const last=e.results[e.results.length-1];if(last.isFinal){fin=[...last].map(a=>a.transcript);if(e.results.length>1)fin=[txt,...fin.slice(1)]}};
+  r.onerror=e=>{VX.on=false;vxUI(false);const s=$('#vx-said');if(!s)return;const k=e.error;s.textContent=k==='not-allowed'||k==='service-not-allowed'?tr('لازم تسمح بالمايك: اضغط على 🔒 فوق في Chrome ← Microphone ← Autoriser.','Autorisez le micro dans Chrome.'):k==='network'?tr('يحتاج أنترنت باش يفهم الصوت.','Connexion requise.'):k==='no-speech'?tr('ما سمعت والو. اضغط وعاود.','Rien entendu. Réessayez.'):tr('ما خدمش المايك','Micro indisponible')+' ('+k+')'};
+  r.onend=()=>{VX.on=false;vxUI(false);if(fin)vxHandle(fin)};r.start()}catch(_){VX.on=false;vxUI(false)}}
+function vxStop(){try{if(VX.rec){VX.rec.onend=null;VX.rec.abort()}}catch(_){}VX.rec=null;VX.on=false;vxUI(false)}
+function vxBtn(b){const k=b.dataset.vx;
+  if(k==='close')return vxClose();if(k==='mic'){if(VX.on)return vxStop();return vxListen()}
+  if(k==='lang'){prefs.vlang=b.dataset.v;savePrefs();document.querySelectorAll('[data-vx=lang]').forEach(x=>x.classList.toggle('on',x===b));return}
+  if(k==='go'){const i=$('#vx-in');const v=i&&i.value.trim();if(v){$('#vx-said').textContent='«'+v+'»';vxHandle([v])}return}
+  if(k==='ex'){const i=$('#vx-in');if(i)i.value=b.dataset.t;$('#vx-said').textContent='«'+b.dataset.t+'»';return vxHandle([b.dataset.t])}
+  if(k==='yes')return vxDo('yes');if(k==='edit')return vxDo('edit');if(k==='no'){VX.pending=null;$('#vx-res').innerHTML='';return}
+  if(k==='act'){const act=b.dataset.a,id=b.dataset.id;vxClose();if(act==='open-client')return go('client',{id});if(act==='new-pay')return vxAct('new-pay',{id});return vxAct(act)}
+  if(k==='pick'){const p=VX.pending;if(!p)return;p.cl={id:b.dataset.id,amb:null};vxShow(p)}}
+function vxAct(act,ds){const b=document.createElement('button');b.dataset.act=act;for(const k in ds||{})if(ds[k]!==undefined)b.dataset[k]=ds[k];b.style.display='none';document.body.appendChild(b);b.click();b.remove()}
+function vxRes(html){const r=$('#vx-res');if(r)r.innerHTML=html}
+function vxHandle(alts){let p=null;for(const a of alts){const x=vxParse(a);if(x.k!=='none'){p=x;p.text=a;break}}if(!p)p={k:'none',text:alts[0]};
+  if(p.k==='yes'||p.k==='edit'||p.k==='no'){if(p.k==='no'){VX.pending=null;vxRes(`<p class="note">${tr('تلغات.','Annulé.')}</p>`);return vxSay(tr('تلغات','Annulé'))}return vxDo(p.k)}
+  VX.pending=null;vxShow(p)}
+function vxClientBlock(id){const c=S.clients[id]||{},s=S.stats[id]||{bal:0};return `<div class="vxcl"><span class="av">${esc(initial(c.name||'?'))}</span><div><b>${esc(c.name||'?')}</b>${c.owner?`<small>${esc(c.owner)}</small>`:''}</div><span class="${num(s.bal)>0.5?'neg':'pos'}">${tr('باقي','Reste')} ${vxDA(num(s.bal))}</span></div>`}
+function vxAmbHTML(p){return `<p class="note">${tr('لقيت أكثر من واحد، اختار:','Plusieurs résultats, choisissez :')}</p><div class="vxpick">${p.cl.amb.map(id=>`<button type="button" data-vx="pick" data-id="${esc(id)}">${esc(S.clients[id].name)}${S.clients[id].owner?' · '+esc(S.clients[id].owner):''}</button>`).join('')}</div>`}
+function vxShow(p){const st=isStaff();
+  if(p.k==='hi'){vxRes(`<div class="vxcard"><b>👋 ${tr('لاباس الحمد لله! واش نقدر نعاونك؟','Ça va, merci ! Que puis-je faire ?')}</b>${vxExamples()}</div>`);return vxSay(tr('لاباس الحمد لله، واش نقدر نعاونك','Ça va merci, que puis-je faire'))}
+  if(p.k==='thx'){vxRes(`<div class="vxcard"><b>🤝 ${tr('العفو، في الخدمة!','Avec plaisir !')}</b></div>`);return vxSay(tr('العفو','Avec plaisir'))}
+  if(p.k==='help'||p.k==='none'){vxRes(`<div class="vxcard">${p.k==='none'?`<b>🤔 ${tr('ما فهمتش مليح.','Je n’ai pas bien compris.')}</b>`:`<b>💡 ${tr('واش تقدر تقول','Exemples')}</b>`}${vxExamples()}</div>`);return vxSay(p.k==='none'?tr('ما فهمتش، عاود من فضلك','Je n’ai pas compris'):'')}
+  if(p.k==='lang'){vxClose();vxAct('lang',{v:p.v});return}
+  if(p.k==='theme'){vxClose();prefs.theme=p.v;savePrefs();applyPrefs();render();return toast(p.v==='dark'?tr('الوضع الليلي 🌙','Mode sombre 🌙'):tr('الوضع الفاتح ☀️','Mode clair ☀️'))}
+  if(p.k==='snd'){prefs.sound=p.v==='on';savePrefs();vxRes(`<div class="vxcard"><b>${p.v==='on'?'🔊 '+tr('الصوت مشعول','Son activé'):'🔇 '+tr('الصوت مطفي','Son coupé')}</b></div>`);return}
+  if(p.k==='back'){vxClose();return history.back()}
+  if(p.k==='nav'){vxClose();if(p.act==='nav-home')return go('home');if(p.act==='nav-more')return go('more');if(p.act==='nav-set')return go('set');return vxAct(p.act)}
+  if(p.k==='search'){vxClose();sq=p.q||'';go('search');return}
+  if(p.k==='openc'){if(p.cl.amb){VX.pending={k:'openc',cl:p.cl};return vxRes(vxAmbHTML(p))}vxClose();return go('client',{id:p.cl.id})}
+  if(p.k==='client'){if(p.cl.amb){VX.pending={k:'client',cl:p.cl};return vxRes(vxAmbHTML(p))}const id=p.cl.id,c=S.clients[id]||{},s=S.stats[id]||{bal:0};let w='';try{w=c.phone&&num(s.bal)>0.5?waText(c.phone,remindText(id)):''}catch(_){}
+    vxRes(`<div class="vxcard">${vxClientBlock(id)}<div class="vxkv"><span>${tr('مجموع المشتريات','Total achats')}</span><b>${vxDA(num(s.sales))}</b><span>${tr('مجموع الدفعات','Total payé')}</span><b>${vxDA(num(s.paid))}</b>${s.lastPay?`<span>${tr('آخر دفعة','Dernier versement')}</span><b>${fdateTxt(s.lastPay)}</b>`:''}</div>
+      <div class="vxbtns"><button type="button" class="btn" data-vx="act" data-a="open-client" data-id="${esc(id)}">${tr('فتح الحساب','Ouvrir')}</button><button type="button" class="btn ghost" data-vx="act" data-a="new-pay" data-id="${esc(id)}">💵 ${tr('فارسمو','Versement')}</button>${w?`<a class="btn ghost" href="${w}" target="_blank" rel="noopener">💬 ${tr('تذكير','Rappel')}</a>`:''}</div></div>`);
+    return vxSay(num(s.bal)>0.5?tr(`باقي على ${c.name} ${vxSp(s.bal)}`,`${c.name} doit ${vxSp(s.bal)}`):tr(`${c.name} خالص، ما عليه والو`,`${c.name} est à jour`))}
+  if(p.k==='stats'){const P=p.per;if(st&&(p.met==='profit'||p.met==='all'))p.met=p.met==='all'?'sales':'none';
+    if(p.met==='none'){vxRes(`<div class="vxcard"><b>🔒 ${tr('هاذي للمدير برك.','Réservé à l’administrateur.')}</b></div>`);return}
+    const x=vxStats(P.f,P.t);const row=(ic_,l,v,cls='')=>`<div class="vxst ${cls}"><span>${ic_} ${l}</span><b>${v}</b></div>`;
+    const R={sales:row('🧾',tr('المبيعات','Ventes'),vxDA(x.sales)+` <small>(${x.nb} ${tr('فاتورة','factures')})</small>`),profit:row('💹',tr('الفايدة (الهامش)','Marge'),vxDA(x.m))+row('✅',tr('الصافي بعد المصاريف','Net après dépenses'),vxDA(x.net)),coll:row('💵',tr('المداخيل (فارسمو + دفع)','Encaissé'),vxDA(x.paid)),
+      debt:P.now?row('📌',tr('مجموع الديون دركا','Total crédits'),vxDA(x.total)+` <small>(${x.dn})</small>`):row(x.debt>=0?'📈':'📉',x.debt>=0?tr('زاد الدين','Crédit ajouté'):tr('نقص الدين','Crédit réduit'),vxDA(Math.abs(x.debt)))+row('📌',tr('مجموع الديون دركا','Total crédits'),vxDA(x.total)),
+      exp:row('💸',tr('المصاريف','Dépenses'),vxDA(x.exp)),cash:(()=>{try{const c=cashDayData(today());return row('💰',tr('في الصندوق (حسب الحساب)','En caisse (théorique)'),vxDA(c.expected))+row('⬇️',tr('دخل اليوم','Entrées'),vxDA(c.cin))+row('⬆️',tr('خرج اليوم','Sorties'),vxDA(c.cout))}catch(_){return''}})()};
+    const order=p.met==='all'?['sales',...(st?[]:['profit']),'coll','debt']:[p.met,...['sales','profit','coll','debt'].filter(k=>k!==p.met&&!(st&&k==='profit')).slice(0,2)];
+    vxRes(`<div class="vxcard"><b>📊 ${esc(P.l)}${P.f!==P.t&&!P.now?` <small>${fdateTxt(P.f)} → ${fdateTxt(P.t)}</small>`:''}</b><div class="vxsts">${order.map((k,i)=>`<div class="${i===0&&p.met!=='all'?'vxmain':''}">${R[k]||''}</div>`).join('')}</div>${x.u>0&&(p.met==='profit')?`<p class="note">${tr('ملاحظة: كاين مبيعات بلا سعر شراء، الفايدة تقريبية.','Certaines ventes sans coût d’achat : marge approximative.')}</p>`:''}
+      <div class="vxbtns"><button type="button" class="btn ghost" data-vx="act" data-a="${p.met==='cash'||p.met==='exp'?'nav-cash':'nav-debts'}">${tr('التفاصيل','Détails')} ›</button></div></div>`);
+    const L=P.l;const say={sales:tr(`مبيعات ${L}: ${vxSp(x.sales)}، ${x.nb} فاتورة`,`Ventes ${L} : ${vxSp(x.sales)}`),profit:tr(`الفايدة ${L}: ${vxSp(x.m)}، والصافي ${vxSp(x.net)}`,`Marge ${L} : ${vxSp(x.m)}`),coll:tr(`دخل ${L}: ${vxSp(x.paid)}`,`Encaissé ${L} : ${vxSp(x.paid)}`),
+      debt:P.now?tr(`مجموع الديون: ${vxSp(x.total)}`,`Total des crédits : ${vxSp(x.total)}`):tr(`${x.debt>=0?'زاد الدين':'نقص الدين'} ${L} ب ${vxSp(Math.abs(x.debt))}، ومجموع الديون ${vxSp(x.total)}`,`Crédits ${L} : ${vxSp(x.debt)}`),exp:tr(`مصاريف ${L}: ${vxSp(x.exp)}`,`Dépenses ${L} : ${vxSp(x.exp)}`),cash:'',all:tr(`${L}: بعت ب ${vxSp(x.sales)}، ودخل ${vxSp(x.paid)}`,`${L} : ventes ${vxSp(x.sales)}, encaissé ${vxSp(x.paid)}`)};
+    return vxSay(say[p.met]||'')}
+  if(p.k==='pay'){if(p.cl&&p.cl.amb){VX.pending=p;return vxRes(vxAmbHTML(p))}
+    if(!p.cl){VX.pending=null;vxRes(`<div class="vxcard"><b>🤔 ${tr('ما لقيتش الحرفي.','Client introuvable.')}</b><p class="note">${tr('قول اسمو كيما مسجّل، ولا حلّ صفحة الفارسمو.','Dites son nom tel qu’enregistré.')}</p><div class="vxbtns"><button type="button" class="btn" data-vx="act" data-a="new-pay">💵 ${tr('فارسمو','Versement')}</button></div></div>`);return vxSay(tr('ما لقيتش الحرفي','Client introuvable'))}
+    if(!(p.amt>0)){vxClose();return vxAct('new-pay',{id:p.cl.id})}
+    VX.pending=p;const s=S.stats[p.cl.id]||{bal:0},after=num(s.bal)-p.amt;
+    vxRes(`<div class="vxcard"><b>💵 ${tr('فارسمو','Versement')}</b>${vxClientBlock(p.cl.id)}<div class="vxbig">${vxDA(p.amt)}</div><p class="note" style="text-align:center">${payMName(p.meth)} · ${tr('الباقي بعدها','Reste après')}: <b>${vxDA(Math.max(0,after))}</b>${after<-0.5?` · ${tr('زايد','en trop')} ${vxDA(-after)}`:''}</p>${vxConfirm()}</div>`);
+    return vxSay(tr(`فارسمو ${(S.clients[p.cl.id]||{}).name} ${vxSp(p.amt)}. نسجّل؟`,`Versement de ${vxSp(p.amt)}. J’enregistre ?`))}
+  if(p.k==='inv'){if(p.cl&&p.cl.amb){VX.pending=p;return vxRes(vxAmbHTML(p))}
+    const cid=p.cl&&!p.walk?p.cl.id:'',mode=p.walk&&!cid?'walk':'shop';
+    if(!p.lines.length){vxClose();startBon(cid,mode);return vxSay(cid?tr(`فاتورة جديدة ل ${(S.clients[cid]||{}).name}`,'Nouvelle facture'):'')}
+    const L=p.lines.map(l=>{const price=priceOf('glass',l.typeId,mode,cid);let amount=0;try{amount=lineCalc({typeId:l.typeId,price,w:String(l.w),h:String(l.h),qty:l.qty}).amount}catch(_){}return{...l,price,amount}});p.L=L;p.cid=cid;p.mode=mode;VX.pending=p;
+    const tot=L.reduce((a,l)=>a+num(l.amount),0),tn=id=>(types().find(t=>t.id===id)||{}).name||'?';
+    vxRes(`<div class="vxcard"><b>🧾 ${tr('فاتورة جديدة','Nouvelle facture')}</b>${cid?vxClientBlock(cid):mode==='walk'?`<p class="note">${tr('زبون عادي','Client comptoir')}</p>`:`<p class="note warn">⚠️ ${tr('ما لقيتش الحرفي، تختارو في الفاتورة.','Client non trouvé : à choisir dans la facture.')}</p>`}
+      <table class="vxtbl"><tr><th>${tr('النوع','Type')}</th><th>${tr('المقاس','Dim.')}</th><th>${tr('العدد','Qté')}</th><th>${tr('المبلغ','Montant')}</th></tr>${L.map(l=>`<tr><td>${esc(tn(l.typeId))}</td><td><bdi dir="ltr">${l.w} × ${l.h}</bdi></td><td>${l.qty}</td><td>${grp(l.amount)}</td></tr>`).join('')}<tr class="t"><td colspan="3">${tr('المجموع','Total')}</td><td>${grp(tot)}</td></tr></table>${vxConfirm(!cid&&mode!=='walk')}</div>`);
+    return vxSay(tr(`فاتورة ${cid?'ل '+(S.clients[cid]||{}).name:''}، ${L.length} ${L.length>1?'أسطر':'سطر'}، المجموع ${vxSp(tot)}. نسجّل؟`,`Facture de ${L.length} ligne(s), total ${vxSp(tot)}. J’enregistre ?`))}}
+function vxConfirm(noSave){return `<div class="vxbtns">${noSave?'':`<button type="button" class="btn" data-vx="yes">✓ ${tr('احفظ','Enregistrer')}</button>`}<button type="button" class="btn ghost" data-vx="edit">✏️ ${tr('عدّل','Modifier')}</button><button type="button" class="btn plain" data-vx="no">✕</button></div>${VX_SR?`<p class="note" style="text-align:center">🎙️ ${tr('تقدر تقول «احفظ» ولا «عدّل»','Dites « enregistre » ou « modifie »')}</p>`:''}`}
+function vxExamples(){const c=Object.values(S.clients)[0],n=c?c.name.split(' ')[0]:tr('خليل','Khalil'),t=(activeTypes()[0]||{}).name||'STP 4';
+  const ex=[tr('مبيعات اليوم','ventes aujourd’hui'),tr('الفايدة تاع هاد الشهر','marge ce mois'),tr('الدين لنهار اليوم','crédits aujourd’hui'),tr(`شحال عليه ${n}؟`,`combien doit ${n}`),tr(`فارسمو ${n} 5000`,`versement ${n} 5000`),tr(`فاتورة ل${n}، ${t}، 120 على 80، زوج`,`facture ${n} ${t} 120 sur 80 deux`),tr('حلّ المخزون','ouvre le stock'),tr('بدّل اللغة','change la langue'),tr('الوضع الليلي','mode sombre')].filter(x=>!isStaff()||!/فايدة|marge/.test(x));
+  return `<div class="vxex">${ex.map(x=>`<button type="button" data-vx="ex" data-t="${esc(x)}">«${esc(x)}»</button>`).join('')}</div>`}
+async function vxDo(k){const p=VX.pending;if(!p)return;
+  if(p.k==='pick')return;
+  if(p.k==='pay'){if(k==='edit'){vxClose();return vxAct('new-pay',{id:p.cl.id})}
+    VX.pending=null;vxClose();go('client',{id:p.cl.id});lastAmt=p.amt;
+    await write(()=>db.collection('payments').doc().set({clientId:p.cl.id,amount:Math.round(p.amt),method:p.meth||'cash',date:today(),note:'',createdAt:Date.now()}),tr('تم تسجيل الدفعة.','Paiement enregistré.'));return}
+  if(p.k==='inv'){VX.pending=null;vxClose();startBon(p.cid,p.mode);
+    const lines=[];let prev=null;p.L.forEach((l,i)=>{const same=prev&&prev.typeId===l.typeId;const g=same?prev.g:'gv'+Date.now().toString(36)+i;const o={typeId:l.typeId,price:l.price,w:String(l.w),h:String(l.h),qty:l.qty,use:'',svc:{},g,sub:!!same};lines.push(o);prev=o});
+    draft.lines=lines;try{ensureGroups()}catch(_){}render();
+    if(k==='yes'&&p.cid||k==='yes'&&p.mode==='walk')setTimeout(()=>{const b=document.querySelector('[data-act="save-bon"]');if(b)b.click()},120);return}}
+/* زر المايك في الأعلى */
+{const _r=render;render=function(){const r=_r.apply(this,arguments);try{const sb=$('#searchbtn');if(sb&&!$('#micbtn')){const b=document.createElement('button');b.className='iconbtn micb';b.id='micbtn';b.dataset.act='voice';b.setAttribute('aria-label',tr('الأوامر الصوتية','Commandes vocales'));b.innerHTML=`<svg class="ic" viewBox="0 0 24 24" aria-hidden="true">${ICONS.mic}</svg>`;sb.parentNode.insertBefore(b,sb)}}catch(_){}return r}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act=voice]');if(!b)return;e.stopPropagation();vxOpen()},true);
+SEARCH_PAGES.push(['voice','🎙️','الأوامر الصوتية','Commandes vocales','صوت مايك ميكرو اوامر voice micro']);
 
 function backupFile(){const data={app:'daftar-zujaj',version:2,exportedAt:new Date().toISOString(),docs:LocalDB.dump()};return new File([JSON.stringify(data)],`tumayd-backup-${today()}.json`,{type:'application/json'})}
 function downloadFile(f){const u=URL.createObjectURL(f);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
