@@ -826,7 +826,7 @@ html.noanim *,html.noanim *::before,html.noanim *::after{animation:none!importan
 #boot.splash{position:fixed;inset:0;z-index:250}
 #boot.splash.out{animation:spout .45s ease-in both;pointer-events:none}
 @keyframes spout{0%{opacity:1;transform:none}100%{opacity:0;transform:scale(1.08)}}
-#shell.in{animation:shin .5s cubic-bezier(.2,.8,.2,1) both}
+#shell.in{animation:shin .5s cubic-bezier(.2,.8,.2,1) backwards}
 @keyframes shin{0%{opacity:0;transform:translateY(40px) scale(.98)}100%{opacity:1;transform:none}}
 #boot.splash .mark{animation:lgpop .9s cubic-bezier(.2,.9,.3,1.3) both,lgfloat 2.2s 1s ease-in-out infinite alternate}
 @keyframes lgfloat{from{transform:translateY(0)}to{transform:translateY(-6px)}}
@@ -837,10 +837,23 @@ html.noanim *,html.noanim *::before,html.noanim *::after{animation:none!importan
 /* v72 */
 .hero{touch-action:pan-y;-webkit-user-select:none;user-select:none}.hero .dbt3{will-change:transform}
 .top,nav.bottom{transition:transform .25s ease}
-body.bars-hide .top{transform:translateY(-110%)}body.bars-hide nav.bottom{transform:translateY(160%)}
+body.bars-hide .top{transform:translateY(-110%)}
 #main.sw-r{animation:swr .28s cubic-bezier(.2,.8,.2,1) both}#main.sw-l{animation:swl .28s cubic-bezier(.2,.8,.2,1) both}
 @keyframes swr{from{opacity:0;transform:translateX(-46px)}to{opacity:1;transform:none}}@keyframes swl{from{opacity:0;transform:translateX(46px)}to{opacity:1;transform:none}}
 @media (min-width:900px){body.bars-hide .top,body.bars-hide nav.bottom{transform:none}}
+
+/* v73: شريط تنقّل عائم يصغر عند التمرير */
+nav.bottom{left:12px;right:12px;bottom:calc(10px + env(safe-area-inset-bottom,0px));border-radius:28px;border:1px solid var(--line);background:color-mix(in srgb,var(--surface) 90%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);box-shadow:0 12px 32px rgba(16,28,46,.18);padding:6px 6px;transition:left .35s cubic-bezier(.2,.8,.2,1),right .35s cubic-bezier(.2,.8,.2,1),padding .3s,transform .25s}
+nav.bottom button>span:not(.ib){display:block;max-height:18px;overflow:hidden;transition:max-height .25s,opacity .2s}
+nav.bottom button.main{transition:transform .3s}
+nav.bottom button.main .ib,nav.bottom button .ic{transition:width .3s,height .3s,padding .3s,border-radius .3s}
+body.nav-mini nav.bottom{left:calc(50% - 128px);right:calc(50% - 128px);padding:3px 4px}
+body.nav-mini nav.bottom button{padding:7px 2px;gap:0}
+body.nav-mini nav.bottom button>span:not(.ib){max-height:0;opacity:0}
+body.nav-mini nav.bottom button.main{transform:none}
+body.nav-mini nav.bottom button.main .ib{width:42px;height:42px;border-radius:15px}
+body.nav-mini nav.bottom button.on .ic{width:42px;height:28px;padding:4px 11px}
+html.noanim nav.bottom{transition:none}
 </style>
 </head>
 <body>
@@ -895,7 +908,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=72; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=73; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6129,7 +6142,7 @@ function splashHold(){if(splashDone||prefs.anim===false)return false;const b=$('
   if(!splashTimer)splashTimer=setTimeout(()=>{splashTimer=null;splashDone=true;render()},left+20);return true}
 function splashOut(){const b=$('#boot');if(!b)return;splashDone=true;try{sessionStorage.setItem('gg-splashed','1')}catch(_){}
   if(b.hidden||prefs.anim===false){b.hidden=true;return}
-  if(b.classList.contains('out'))return;b.classList.add('out');const sh=$('#shell');if(sh){sh.classList.remove('in');void sh.offsetWidth;sh.classList.add('in')}
+  if(b.classList.contains('out'))return;b.classList.add('out');const sh=$('#shell');if(sh){sh.classList.remove('in');void sh.offsetWidth;sh.classList.add('in');setTimeout(()=>sh.classList.remove('in'),560)}
   setTimeout(()=>{b.hidden=true;b.classList.remove('out')},460)}
 
 
@@ -6174,6 +6187,15 @@ window.addEventListener('scroll',()=>{const y=window.scrollY||0,d=y-barY;barY=y;
   if((d>0&&barAcc<0)||(d<0&&barAcc>0))barAcc=0;barAcc+=d;
   if(barAcc>14)document.body.classList.add('bars-hide');else if(barAcc<-8)document.body.classList.remove('bars-hide')},{passive:true});
 {const _g=go;go=function(n,a){document.body.classList.remove('bars-hide');barAcc=0;return _g(n,a)}}
+
+
+/* ---- v73: الشريط العائم يصغر عند التمرير لتحت ويكبر كي تطلع ---- */
+let nmY=window.scrollY||0,nmAcc=0;
+window.addEventListener('scroll',()=>{const y=window.scrollY||0,d=y-nmY;nmY=y;const B=document.body;
+  if(window.innerWidth>=900||y<40){if(B.classList.contains('nav-mini'))B.classList.remove('nav-mini');nmAcc=0;return}
+  if((d>0&&nmAcc<0)||(d<0&&nmAcc>0))nmAcc=0;nmAcc+=d;
+  if(nmAcc>12)B.classList.add('nav-mini');else if(nmAcc<-8)B.classList.remove('nav-mini')},{passive:true});
+{const _g=go;go=function(n,a){document.body.classList.remove('nav-mini');nmAcc=0;return _g(n,a)}}
 
 function backupFile(){const data={app:'daftar-zujaj',version:2,exportedAt:new Date().toISOString(),docs:LocalDB.dump()};return new File([JSON.stringify(data)],`tumayd-backup-${today()}.json`,{type:'application/json'})}
 function downloadFile(f){const u=URL.createObjectURL(f);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
