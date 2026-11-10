@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>Guessoum Glass</title>
-<meta name="theme-color" content="#f3f4f6">
+<meta name="theme-color" content="#1b5fae">
 <meta name="description" content="Guessoum Glass: البيع بالكريدي، ديون الحرفيين، ومخزون الزجاج">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
@@ -25,8 +25,8 @@ if(p.lang==='fr'){h.lang='fr';h.dir='ltr'}}catch(e){}
 @font-face{font-family:"IBM Plex Sans Arabic";src:url("IBMPlexSansArabic-Bold.woff2") format("woff2");font-weight:700;font-style:normal;font-display:swap}
 /* Layout: phone-first ledger. Sticky brand bar, one scrolling column, five-tab bottom bar with a raised "new sale" button. */
 :root{
-  --bg:#eef3f2; --surface:#ffffff; --surface2:#f6f9f8; --sunk:#e5edeb; --ink:#10201e; --muted:#566865; --faint:#869794; --line:#d9e3e1;
-  --accent:#17635e; --accent-2:#0f4b47; --accent-ink:#ffffff; --accent-soft:#dbece8; --edge:#9fd3c7;
+  --bg:#eef2f7; --surface:#ffffff; --surface2:#f6f8fb; --sunk:#e6ebf2; --ink:#101c2e; --muted:#56637a; --faint:#8692a3; --line:#d9e0ea;
+  --accent:#1b5fae; --accent-2:#124686; --accent-ink:#ffffff; --accent-soft:#e3edf9; --edge:#9fc1ee;
   --debt:#b0392d; --debt-soft:#f8e2de; --warn:#8f5d0a; --warn-soft:#f6ebd2; --ok:#22703e; --ok-soft:#dcefe2;
   --shadow:0 1px 2px rgba(16,32,30,.05),0 6px 18px rgba(16,32,30,.06);
   --f-body:"IBM Plex Sans Arabic",system-ui,-apple-system,"Segoe UI",sans-serif;
@@ -34,13 +34,13 @@ if(p.lang==='fr'){h.lang='fr';h.dir='ltr'}}catch(e){}
   --r:16px; color-scheme:light;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
-  --bg:#0b1312; --surface:#13201e; --surface2:#162523; --sunk:#1b2c2a; --ink:#e3eeec; --muted:#98aba8; --faint:#6c807d; --line:#243735;
-  --accent:#4fb3a8; --accent-2:#74cbc0; --accent-ink:#04201d; --accent-soft:#173936; --edge:#2b665e;
+  --bg:#0b1118; --surface:#131c28; --surface2:#16202e; --sunk:#1b2636; --ink:#e3eaf3; --muted:#98a6b8; --faint:#6c7a8d; --line:#243244;
+  --accent:#5aa3f0; --accent-2:#86bdf5; --accent-ink:#04172b; --accent-soft:#16304d; --edge:#2f5f94;
   --debt:#f2877c; --debt-soft:#3a1f1b; --warn:#e6ae57; --warn-soft:#382b13; --ok:#70cc90; --ok-soft:#153123;
   --shadow:0 1px 0 rgba(255,255,255,.02); color-scheme:dark}}
 :root[data-theme="dark"]{
-  --bg:#0b1312; --surface:#13201e; --surface2:#162523; --sunk:#1b2c2a; --ink:#e3eeec; --muted:#98aba8; --faint:#6c807d; --line:#243735;
-  --accent:#4fb3a8; --accent-2:#74cbc0; --accent-ink:#04201d; --accent-soft:#173936; --edge:#2b665e;
+  --bg:#0b1118; --surface:#131c28; --surface2:#16202e; --sunk:#1b2636; --ink:#e3eaf3; --muted:#98a6b8; --faint:#6c7a8d; --line:#243244;
+  --accent:#5aa3f0; --accent-2:#86bdf5; --accent-ink:#04172b; --accent-soft:#16304d; --edge:#2f5f94;
   --debt:#f2877c; --debt-soft:#3a1f1b; --warn:#e6ae57; --warn-soft:#382b13; --ok:#70cc90; --ok-soft:#153123;
   --shadow:0 1px 0 rgba(255,255,255,.02); color-scheme:dark}
 *{box-sizing:border-box}
@@ -121,7 +121,7 @@ p.note{margin:0;max-width:60ch}
 .gtips{margin-top:12px;display:grid;gap:6px}
 .gtips div{display:flex;gap:8px;align-items:flex-start;background:var(--accent-soft);color:var(--accent-2);border-radius:10px;padding:8px 10px;font-size:.86rem}
 .gtips .ic{width:18px;height:18px;margin-top:2px;flex-shrink:0}
-.gprint section{break-inside:avoid;margin:10px 0}.gprint h3{font-size:14px;color:#0f4b47;text-transform:none;letter-spacing:0;margin:0 0 4px}.gprint .note{color:#333}.gprint .gtips div{background:#eef5f3;color:#0f4b47}
+.gprint section{break-inside:avoid;margin:10px 0}.gprint h3{font-size:14px;color:#124686;text-transform:none;letter-spacing:0;margin:0 0 4px}.gprint .note{color:#333}.gprint .gtips div{background:#eef3fa;color:#124686}
 .hero::after{pointer-events:none}
 .hero>*{position:relative;z-index:1}
 .eyebtn{flex-shrink:0;width:44px;height:44px;border-radius:14px;border:0;background:rgba(255,255,255,.16);color:inherit;display:grid;place-items:center}
@@ -296,6 +296,7 @@ button.le:hover{background:var(--surface2)}
 .gate{min-height:100vh;min-height:100dvh;display:grid;place-items:center;padding:calc(24px + env(safe-area-inset-top,0px)) 16px calc(24px + env(safe-area-inset-bottom,0px));background:radial-gradient(120% 70% at 50% 0%,var(--accent-soft),var(--bg) 70%)}
 .gate-card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--line);border-radius:24px;padding:26px 20px;display:grid;gap:14px;box-shadow:var(--shadow)}
 .gate-head{display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center}
+#boot.splash{background:linear-gradient(160deg,#0f3f7a,#1b5fae 60%,#2a78d6);color:#fff}#boot.splash .mark{width:96px;height:96px;border-radius:24px;box-shadow:0 8px 24px rgba(0,0,0,.25)}#boot.splash b{color:#fff;font-size:1.4rem;letter-spacing:.3px;margin-top:8px;font-family:var(--f-disp)}#boot.splash span{color:#fff;font-size:.8rem;opacity:.9}#boot.splash .spbar{display:block;width:36px;height:4px;border-radius:2px;background:rgba(255,255,255,.35);margin-top:22px;position:relative;overflow:hidden}#boot.splash .spbar::after{content:'';position:absolute;inset:0;width:40%;background:#fff;border-radius:2px;animation:spb 1s ease-in-out infinite alternate}@keyframes spb{from{transform:translateX(-10%)}to{transform:translateX(160%)}}
 .gate-head .mark{width:72px;height:72px;border-radius:20px}
 .gate-head b{font-family:var(--f-disp);font-size:1.6rem;font-weight:700}
 .gate-head span{font-size:.8rem;color:var(--muted);letter-spacing:.04em}
@@ -315,18 +316,18 @@ nav.bottom button.main .ic{width:26px;height:26px;stroke-width:2.2}
 nav.bottom button.main span{color:var(--accent)}
 #print{display:none}
 .rc{max-width:148mm;margin:0 auto;font-family:var(--f-body);color:#111;background:#fff;padding:8mm 6mm;font-size:12px;line-height:1.5}
-.rc-head{display:flex;align-items:center;gap:10px;border-bottom:2px solid #17635e;padding-bottom:8px;margin-bottom:8px}
+.rc-head{display:flex;align-items:center;gap:10px;border-bottom:2px solid #1b5fae;padding-bottom:8px;margin-bottom:8px}
 .rc-head .mark{width:46px;height:46px;border-radius:12px}
-.rc-head b{font-family:var(--f-disp);font-size:18px;display:block;color:#0f4b47}
+.rc-head b{font-family:var(--f-disp);font-size:18px;display:block;color:#124686}
 .rc-head small{color:#555;display:block}
 .rc-meta{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap;margin:6px 0 10px}
 .rc-meta b{font-size:14px}
 .rc table{width:100%;border-collapse:collapse;font-size:11.5px}
-.rc th{background:#eef5f3;text-align:start;padding:5px 4px;border-bottom:1px solid #bbb;font-weight:600}
+.rc th{background:#eef3fa;text-align:start;padding:5px 4px;border-bottom:1px solid #bbb;font-weight:600}
 .rc td{padding:5px 4px;border-bottom:1px solid #ddd;font-variant-numeric:tabular-nums}
 .rc .tot{margin-top:8px;display:grid;gap:3px;margin-inline-start:auto;width:60%}
 .rc .tot div{display:flex;justify-content:space-between;gap:10px}
-.rc .tot .g{font-size:15px;font-weight:700;border-top:2px solid #17635e;padding-top:4px}
+.rc .tot .g{font-size:15px;font-weight:700;border-top:2px solid #1b5fae;padding-top:4px}
 .rc-logo{max-width:90px;max-height:56px;object-fit:contain;border-radius:6px}
 .rc.tk{max-width:72mm;width:72mm;padding:2mm 1mm;font-size:11px;line-height:1.4}
 .rc.tk .tk-h{text-align:center;display:grid;justify-items:center;gap:1px}.rc.tk .tk-h b{font-size:14px}.rc.tk .tk-h small{color:#333;font-size:10px}
@@ -412,13 +413,13 @@ body.staff .adm{display:none!important}
 
 /* ===== GG-2: super-app look (big rounded cards, colored service tiles, pill buttons) ===== */
 :root{--bg:#f3f4f6;--surface:#ffffff;--surface2:#f6f7f9;--sunk:#eceef2;--ink:#111827;--muted:#5b6472;--faint:#9aa2ae;--line:#e6e8ed;
-  --accent:#17635e;--accent-2:#0f4b47;--accent-soft:#e1efec;--cardline:transparent;--r:20px;
+  --accent:#1b5fae;--accent-2:#124686;--accent-soft:#e3edf9;--cardline:transparent;--r:20px;
   --shadow:0 1px 2px rgba(17,24,39,.04),0 4px 14px rgba(17,24,39,.06);
-  --t1b:#e1efec;--t1f:#17635e;--t2b:#fdf0d8;--t2f:#9a5b00;--t3b:#e2f4e7;--t3f:#1f7a3d;--t4b:#ece8fd;--t4f:#5b3fc4}
-@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b1111;--surface:#151c1c;--surface2:#1a2222;--sunk:#202a2a;--line:#283333;--cardline:#232d2d;
-  --t1b:#173936;--t1f:#74cbc0;--t2b:#3a2c12;--t2f:#f0b85c;--t3b:#163222;--t3f:#7fd59c;--t4b:#2a2447;--t4f:#b3a5f7}}
-:root[data-theme="dark"]{--bg:#0b1111;--surface:#151c1c;--surface2:#1a2222;--sunk:#202a2a;--line:#283333;--cardline:#232d2d;
-  --t1b:#173936;--t1f:#74cbc0;--t2b:#3a2c12;--t2f:#f0b85c;--t3b:#163222;--t3f:#7fd59c;--t4b:#2a2447;--t4f:#b3a5f7}
+  --t1b:#e3edf9;--t1f:#1b5fae;--t2b:#fdf0d8;--t2f:#9a5b00;--t3b:#e2f4e7;--t3f:#1f7a3d;--t4b:#ece8fd;--t4f:#5b3fc4}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){--bg:#0b1118;--surface:#151b24;--surface2:#1a212c;--sunk:#202936;--line:#283241;--cardline:#232c3a;
+  --t1b:#16304d;--t1f:#86bdf5;--t2b:#3a2c12;--t2f:#f0b85c;--t3b:#163222;--t3f:#7fd59c;--t4b:#2a2447;--t4f:#b3a5f7}}
+:root[data-theme="dark"]{--bg:#0b1118;--surface:#151b24;--surface2:#1a212c;--sunk:#202936;--line:#283241;--cardline:#232c3a;
+  --t1b:#16304d;--t1f:#86bdf5;--t2b:#3a2c12;--t2f:#f0b85c;--t3b:#163222;--t3f:#7fd59c;--t4b:#2a2447;--t4f:#b3a5f7}
 body{font-size:15.5px}
 h2{font-size:1.5rem;font-weight:700;letter-spacing:-.01em}
 h3,.sec h3{font-size:1rem;font-weight:700;color:var(--ink);text-transform:none;letter-spacing:0}
@@ -765,7 +766,7 @@ input.subuse{padding:7px 10px;font-size:.85rem}
 .emo-av{font-size:1.15rem;background:var(--sunk)}
 .sana{display:grid;gap:10px}.pch2{display:grid;grid-template-columns:repeat(4,1fr);gap:5px}.pch2 button{border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:7px 2px;font:inherit;font-size:.8rem;font-weight:700;color:var(--muted)}.pch2 button.on{background:var(--accent);color:#fff;border-color:transparent}
 .sbars{display:flex;align-items:stretch;gap:4px;height:130px;border-bottom:1px solid var(--line);padding-top:4px}.sbar{flex:1;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;gap:2px;min-width:0}
-.sbar i{display:block;width:100%;background:linear-gradient(#2bb38a,#17635e);border-radius:5px 5px 0 0}.sbar small{font-size:.6rem;color:var(--muted);white-space:nowrap}.sbv{font-size:.6rem;color:var(--muted)}
+.sbar i{display:block;width:100%;background:linear-gradient(#5aa3f0,#1b5fae);border-radius:5px 5px 0 0}.sbar small{font-size:.6rem;color:var(--muted);white-space:nowrap}.sbv{font-size:.6rem;color:var(--muted)}
 .stop{display:grid;gap:3px}
 .cmpch{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;scrollbar-width:none}.cmpch button{flex:none;border:1px solid var(--line);background:var(--surface);border-radius:99px;padding:7px 12px;font:inherit;font-size:.82rem;font-weight:700;color:var(--ink);white-space:nowrap}
 .cmpch button.on{background:var(--accent);color:#fff;border-color:transparent}.cmpch small{background:var(--sunk);color:var(--muted);border-radius:99px;padding:0 6px;font-size:.7rem}.cmpch button.on small{background:rgba(255,255,255,.25);color:#fff}
@@ -782,7 +783,7 @@ input.subuse{padding:7px 10px;font-size:.85rem}
 .fsbar{position:sticky;top:calc(-10px - env(safe-area-inset-top,0px));z-index:2;background:var(--surface);display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0 10px;border-bottom:1px solid var(--line);margin-bottom:2px}
 .fsbar h2{margin:0;font-size:1.1rem;flex:1;text-align:center}
 .fsx{width:42px;height:42px;border-radius:12px;border:0;background:var(--sunk);font-size:1.1rem;color:var(--muted)}
-.fsok{width:50px;height:50px;border-radius:50%;border:0;background:linear-gradient(135deg,#1fa37a,#17635e);color:#fff;font-size:1.5rem;font-weight:800;box-shadow:0 4px 12px rgba(23,99,94,.35)}
+.fsok{width:50px;height:50px;border-radius:50%;border:0;background:linear-gradient(135deg,#2a78d6,#1b5fae);color:#fff;font-size:1.5rem;font-weight:800;box-shadow:0 4px 12px rgba(23,99,94,.35)}
 .busec{display:flex;justify-content:space-between;align-items:center;border-radius:12px;padding:9px 12px;font-weight:800}.busec.g{background:var(--accent-soft);color:var(--accent)}.busec.m{background:#fff3e0;color:#9a5300}
 .bugrp{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
 .bugh{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:9px 12px;background:var(--sunk);border-bottom:1px solid var(--line)}.bugh small{display:block;color:var(--muted);font-size:.75rem;font-weight:500}
@@ -810,7 +811,7 @@ input.subuse{padding:7px 10px;font-size:.85rem}
   <main class="app" id="main"></main>
   <nav class="bottom"><div class="in" id="nav"></div></nav>
 </div>
-<div id="boot" class="gate"><div class="gate-head"><img class="mark" src="icon-192.png" alt="" style="object-fit:cover"></div></div>
+<div id="boot" class="gate splash"><div class="gate-head"><img class="mark" src="icon-192.png" alt="" style="object-fit:cover"><b dir="ltr">Guessoum Glass</b><span>بيع وتركيب الزجاج · Sale &amp; Installation</span><i class="spbar"></i></div></div>
 <div id="toast" class="toast" hidden></div>
 <div id="print" aria-hidden="true"></div>
 <div id="modal" class="modal" hidden></div>
@@ -851,7 +852,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=65; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=66; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -2517,7 +2518,7 @@ function shopHTML(){
   <div class="field"><label for="sh-name">${tr('اسم المحل','Nom du magasin')}</label><input id="sh-name" value="${esc(shopDraft.name)}" placeholder="${tr('زجاج صدام','Vitrerie Saddam')}"></div>
   <div class="card pad stack" style="gap:10px"><b>${tr('شعار المحل','Logo du magasin')}</b>
     <div class="rowflex" style="gap:14px">${shopDraft.logo?`<img src="${esc(shopDraft.logo)}" alt="" style="max-width:120px;max-height:70px;object-fit:contain;border:1px solid var(--line);border-radius:10px;background:#fff;padding:4px">`:`<span style="width:56px;height:56px;display:inline-block">${MARK}</span>`}
-    <div class="stack" style="gap:6px"><label class="btn ghost" for="sh-logo" style="cursor:pointer">${ic('upload')}${shopDraft.logo?tr('تغيير الشعار','Changer le logo'):tr('اختر صورة الشعار','Choisir une image')}</label><input id="sh-logo" type="file" accept="image/*" hidden>${shopDraft.logo?`<button class="btn plain" data-act="sh-logo-rm">${tr('إزالة الشعار','Retirer le logo')}</button>`:''}</div></div>
+    <div class="stack" style="gap:6px"><label class="btn ghost" for="sh-logo" style="cursor:pointer">${ic('upload')}${shopDraft.logo?tr('تغيير الشعار','Changer le logo'):tr('اختر صورة الشعار','Choisir une image')}</label><input id="sh-logo" type="file" accept="image/*" hidden>${shopDraft.logo?`<button class="btn plain" data-act="sh-logo-rm">${tr('إزالة الشعار','Retirer le logo')}</button>`:''}${shopDraft.logo&&shopDraft.logo!==LOGO?`<button class="btn ghost" data-act="sh-logo-app" style="width:auto">🪟 ${tr('استعمال شعار التطبيق','Utiliser le logo de l’app')}</button>`:''}</div></div>
     <p class="note" style="margin:0">${tr('يظهر في أعلى الفاتورة والإيصال وكشف الحساب.','Affiché en haut des factures, tickets et relevés.')}</p></div>
   <div class="field"><label for="sh-act">${tr('النشاط','Activité')}</label><input id="sh-act" value="${esc(shopDraft.activity||'')}" placeholder="${tr('بيع وتركيب الزجاج والمرايات','Vente et pose de verre et miroirs')}"></div>
   <div class="field"><label for="sh-phone">${tr('هاتف المحل','Téléphone du magasin')}</label><input id="sh-phone" inputmode="tel" dir="ltr" value="${esc(shopDraft.phone)}"></div>
@@ -2964,14 +2965,11 @@ async function stmtPages(){
   const R=(x1,y1,w,h,c)=>{x.fillStyle=c;const a=X(x1),b=X(x1+w);x.fillRect(Math.min(a,b),y1,Math.abs(b-a),h)};
   /* columns measured from the start edge (right in Arabic) */
   const C={date:[M,M+175],op:[M+185,W-M-540],deb:[W-M-530,W-M-360],cred:[W-M-350,W-M-180],bal:[W-M-170,W-M]};
-  const head=()=>{R(M,y,W-2*M,46,'#eef5f3');L(M,y+46,W-M,y+46,'#bbb',2);const o={s:20,w:700,c:'#333'};
+  const head=()=>{R(M,y,W-2*M,46,'#eef3fa');L(M,y+46,W-M,y+46,'#bbb',2);const o={s:20,w:700,c:'#333'};
     T(tr('التاريخ','Date'),C.date[0]+8,y+31,o);T(tr('العملية','Opération'),C.op[0]+8,y+31,o);T(tr('مدين','Débit'),C.deb[0]+8,y+31,o);T(tr('دائن','Crédit'),C.cred[0]+8,y+31,o);T(tr('الرصيد','Solde'),C.bal[0]+8,y+31,o);y+=58};
   const page=(first)=>{cv=document.createElement('canvas');cv.width=W;cv.height=H;x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);pages.push(cv);y=M;
     if(first){
-      if(logo){const s=Math.min(150/logo.width,100/logo.height,1.5),lw=logo.width*s,lh=logo.height*s;x.drawImage(logo,RTL?M:W-M-lw,y,lw,lh)}
-      T(shopName(),M,y+34,{s:34,w:700});let yy=y+34;
-      for(const l of [sh.activity,sh.address,sh.phone?(tr('الهاتف','Tél')+': '+sh.phone):'',[['RC',sh.rc],['NIF',sh.nif],['NIS',sh.nis],['AI',sh.ai]].filter(v=>v[1]).map(v=>v[0]+': '+v[1]).join(' · ')].filter(Boolean)){yy+=30;T(l,M,yy,{s:19,c:'#555'})}
-      y=Math.max(yy,y+(logo?100:0))+26;L(M,y,W-M,y,'#17635e',3);y+=44;
+      y=pdfHead({x,T,L,W,M,RTL,y,logo,sh});y+=44;
       T(tr('كشف حساب','Relevé de compte'),M,y,{s:30,w:700});
       T(tr('بتاريخ','Édité le')+' '+fdateTxt(today()),W-M,y,{s:20,c:'#444',a:'end'});
       y+=38;T(tr('الزبون','Client')+': '+d.c.name,M,y,{s:23,w:700});
@@ -2999,7 +2997,7 @@ async function stmtPages(){
   const words=wrap(tr('أُوقف هذا الكشف على مبلغ','Arrêté le présent relevé à la somme de')+': '+amountWords(d.run),W-2*M,{s:20});
   if(y+tl.length*36+70+words.length*30+90>bottom)page(false);
   const bx=W-M-560;y+=34;for(const [l,v] of tl){T(l,bx,y,{s:20,c:'#333'});T(grpTxt(v)+' '+CUR(),W-M,y,{s:20,a:'end'});y+=36}
-  L(bx,y-16,W-M,y-16,'#17635e',3);y+=16;T(tr('الرصيد المتبقي','Solde restant'),bx,y,{s:26,w:700});T(grpTxt(d.run)+' '+CUR(),W-M,y,{s:26,w:700,a:'end',c:d.run>0?'#b0392d':'#111'});y+=50;
+  L(bx,y-16,W-M,y-16,'#1b5fae',3);y+=16;T(tr('الرصيد المتبقي','Solde restant'),bx,y,{s:26,w:700});T(grpTxt(d.run)+' '+CUR(),W-M,y,{s:26,w:700,a:'end',c:d.run>0?'#b0392d':'#111'});y+=50;
   for(const l of words){T(l,M,y,{s:20,w:600});y+=30}
   y+=20;T(sh.footer||tr('شكراً على ثقتكم','Merci de votre confiance'),W/2,Math.min(y+10,H-M-20),{s:19,c:'#555',a:'center'});
   pages.forEach((p,i)=>{x=p.getContext('2d');T(`${i+1} / ${pages.length}`,W/2,H-34,{s:17,c:'#888',a:'center',ltr:true})});
@@ -4266,15 +4264,12 @@ async function bonPages(id,kind){
   const lines=b.lines||[],hasUse=lines.some(l=>String(l.use||'').trim()),hasSvc=lines.some(l=>num(l.svcAmt)>0);
   const defs=[['n','#',44],['type',tr('النوع','Type'),hasUse?220:330],...(hasUse?[['use',tr('الاستعمال','Usage'),150]]:[]),['dim',tr('المقاس (سم)','Dim. (cm)'),165],['qty',tr('العدد','Qté'),82],...(bpFull?[['area',tr('م²','m²'),105]]:[]),...(bpFull||q?[['price',tr('السعر','Prix'),140]]:[]),['amt',tr('المبلغ','Montant'),0]];
   let cx=M;const C={};for(const [k,l,w] of defs){const ww=w||(W-M-cx);C[k]=[cx,cx+ww,l];cx+=ww}
-  const head=()=>{R(M,y,W-2*M,48,'#eef5f3');L(M,y+48,W-M,y+48,'#bbb',2);for(const k in C)T(C[k][2],C[k][0]+8,y+32,{s:19,w:700,c:'#333'});y+=60};
+  const head=()=>{R(M,y,W-2*M,48,'#eef3fa');L(M,y+48,W-M,y+48,'#bbb',2);for(const k in C)T(C[k][2],C[k][0]+8,y+32,{s:19,w:700,c:'#333'});y+=60};
   const title=q?tr('عرض سعر رقم','Devis n°'):b.kind==='return'?tr('مرتجع رقم','Avoir n°'):tr('فاتورة رقم','Facture n°');
   const page=first=>{cv=document.createElement('canvas');cv.width=W;cv.height=H;x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);pages.push(cv);y=M;
     if(first){
-      if(logo){const s=Math.min(150/logo.width,100/logo.height,1.5),lw=logo.width*s,lh=logo.height*s;x.drawImage(logo,RTL?M:W-M-lw,y,lw,lh)}
-      T(shopName(),M,y+34,{s:34,w:700});let yy=y+34;
-      for(const l of [sh.activity,sh.address,sh.phone?(tr('الهاتف','Tél')+': '+sh.phone):'',[['RC',sh.rc],['NIF',sh.nif],['NIS',sh.nis],['AI',sh.ai]].filter(v=>v[1]).map(v=>v[0]+': '+v[1]).join(' · ')].filter(Boolean)){yy+=30;T(l,M,yy,{s:19,c:'#555'})}
-      y=Math.max(yy,y+(logo?100:0))+26;L(M,y,W-M,y,'#17635e',3);y+=46;
-      T(title+' '+b.num,M,y,{s:32,w:700});T(fdateTxt(b.date)+(b.createdAt?' · '+String(ftime(b.createdAt)).replace(/<[^>]+>/g,''):''),W-M,y,{s:20,c:'#444',a:'end'});
+      y=pdfHead({x,T,L,W,M,RTL,y,logo,sh});y+=46;
+      T(title+' '+b.num,M,y,{s:32,w:700,c:'#1b5fae'});T(fdateTxt(b.date)+(b.createdAt?' · '+String(ftime(b.createdAt)).replace(/<[^>]+>/g,''):''),W-M,y,{s:20,c:'#444',a:'end'});
       const cl=!b.walkin&&S.clients[b.clientId];y+=40;T(tr('الزبون','Client')+': '+custName(b),M,y,{s:24,w:700});
       if(cl&&cl.owner){y+=32;T(tr('المسؤول','Responsable')+': '+cl.owner,M,y,{s:21,c:'#333'})}
       const ph=b.walkin?b.cphone:cl&&cl.phone;if(ph){y+=32;T(tr('الهاتف','Tél')+': '+ph,M,y,{s:21,c:'#333'})}
@@ -4285,7 +4280,7 @@ async function bonPages(id,kind){
   lines.forEach((l,i)=>{const art=l.lk==='art',typeL=wrap(l.type||'',C.type[1]-C.type[0]-14,{s:21,w:600}),useL=hasUse&&!art?wrap(l.use||'',C.use[1]-C.use[0]-14,{s:20}):[''];
     const sv=hasSvc&&num(l.svcAmt)>0?wrap(tr('التشطيب','Façonnage')+': '+(l.svcText||'')+' · '+grpTxt(l.svcAmt)+' '+CUR(),W-2*M-C.type[0]+M-20,{s:17}):[];
     const rowsN=Math.max(typeL.length,useL.length),hgt=28+(rowsN-1)*28+sv.length*25+22;
-    if(y+hgt>bottom)page(false);const b0=y+28;if(i%2)R(M,y,W-2*M,hgt,'#f8fbfa');
+    if(y+hgt>bottom)page(false);const b0=y+28;if(i%2)R(M,y,W-2*M,hgt,'#f7f9fc');
     T(i+1,C.n[0]+8,b0,{s:19,c:'#666',ltr:true});typeL.forEach((t,j)=>T(t,C.type[0]+8,b0+j*28,{s:21,w:600}));if(hasUse&&!art)useL.forEach((t,j)=>T(t,C.use[0]+8,b0+j*28,{s:20,c:'#333'}));
     if(!art)T(`${cf1(l.w)} × ${cf1(l.h)}`,C.dim[0]+8,b0,{s:21,ltr:true});
     T(art?`${dec2s(l.qty).replace(/<[^>]+>/g,'')} ${l.unit||''}`:String(l.qty),C.qty[0]+8,b0,{s:21,ltr:!art});if(bpFull&&!art)T((Math.round(num(l.billArea||l.area)*100)/100).toFixed(2),C.area[0]+8,b0,{s:20,ltr:true,c:'#333'});
@@ -4296,13 +4291,13 @@ async function bonPages(id,kind){
   /* المجاميع */
   const atSale=q?0:b.walkin?walkPaidAll(b):shopPaidOn(id),st=!q&&!b.walkin&&S.stats[b.clientId];
   const area=lines.reduce((s,l)=>s+num(l.billArea||l.area),0),kg=bonKg(b);
-  const tl=[];if(bpFull&&!q){if(area>0)tl.push([tr('المساحة الكلية','Surface totale'),(Math.round(area*100)/100).toFixed(2)+' '+tr('م²','m²')]);if(kg>0)tl.push([tr('الوزن التقريبي','Poids approx.'),Math.round(kg)+' '+tr('كغ','kg')]);const mg=bonMargin(b);tl.push([tr('ربحك (نسختي)','Marge (ma copie)'),grpTxt(mg.m)+' '+CUR()])}
+  const tl=[];{const pcs=lines.reduce((a,l)=>a+(l.lk==='art'?0:Math.round(num(l.qty)||0)),0);if(pcs>0)tl.push([tr('مجموع القطع','Nombre de pièces'),pcs+' '+tr('قطعة','pièce(s)')])}if(bpFull&&!q){if(area>0)tl.push([tr('المساحة الكلية','Surface totale'),(Math.round(area*100)/100).toFixed(2)+' '+tr('م²','m²')]);if(kg>0)tl.push([tr('الوزن التقريبي','Poids approx.'),Math.round(kg)+' '+tr('كغ','kg')]);const mg=bonMargin(b);tl.push([tr('ربحك (نسختي)','Marge (ma copie)'),grpTxt(mg.m)+' '+CUR()])}
   if(num(b.disc)>0){tl.push([tr('المجموع قبل التخفيض','Sous-total'),grpTxt(b.sub)+' '+CUR()]);tl.push([tr('التخفيض','Remise'),'−'+grpTxt(b.disc)+' '+CUR()])}
   const tl2=[];if(!q&&b.kind==='sale'){{const fg=b.walkin?fgW(b):0;tl2.push([tr('المدفوع','Payé'),grpTxt(atSale-fg)+' '+CUR()]);if(fg>0)tl2.push([tr('تنازل','Remise accordée'),grpTxt(fg)+' '+CUR()])}tl2.push([tr('الباقي من هذه الفاتورة','Reste sur cette facture'),grpTxt(Math.max(0,num(b.total)-atSale))+' '+CUR()]);if(st)tl2.push([tr('رصيد الحساب الكلي','Solde total du compte'),grpTxt(st.bal)+' '+CUR()])}
   const words=wrap((q?tr('أُوقف هذا العرض على مبلغ','Arrêté le présent devis à la somme de'):tr('أُوقفت هذه الفاتورة على مبلغ','Arrêtée la présente facture à la somme de'))+': '+amountWords(b.total),W-2*M,{s:20});
   if(y+(tl.length+tl2.length)*36+90+words.length*30+90>bottom)page(false);
   const bx=W-M-560;y+=34;for(const [l,v] of tl){T(l,bx,y,{s:20,c:'#333'});T(v,W-M,y,{s:20,a:'end'});y+=36}
-  L(bx,y-16,W-M,y-16,'#17635e',3);y+=16;T(tr('المجموع','Total'),bx,y,{s:28,w:700});T(grpTxt(b.total)+' '+CUR(),W-M,y,{s:28,w:700,a:'end'});y+=46;
+  L(bx,y-16,W-M,y-16,'#1b5fae',3);y+=16;T(tr('المجموع','Total'),bx,y,{s:28,w:700});T(grpTxt(b.total)+' '+CUR(),W-M,y,{s:28,w:700,a:'end'});y+=46;
   for(const [l,v] of tl2){T(l,bx,y,{s:20,c:'#333'});T(v,W-M,y,{s:20,a:'end',w:600});y+=36}
   y+=10;for(const l of words){T(l,M,y,{s:20,w:600});y+=30}
   if(!q&&b.due&&!b.walkin){T(tr('موعد التسديد','Échéance')+': '+fdateTxt(b.due),M,y,{s:20});y+=30}
@@ -5288,12 +5283,10 @@ async function blPages(id,full){const b=S.bons[id];if(!b)throw 0;const sh=S.shop
   const R=(x1,y1,w,h,c)=>{x.fillStyle=c;const a=X(x1),bb=X(x1+w);x.fillRect(Math.min(a,bb),y1,Math.abs(bb-a),h)};
   const RB=(x1,y1,w,h,c,dash)=>{x.strokeStyle=c;x.lineWidth=2;x.setLineDash(dash||[]);const a=X(x1),bb=X(x1+w);x.strokeRect(Math.min(a,bb),y1,Math.abs(bb-a),h);x.setLineDash([])};
   const page=first=>{cv=document.createElement('canvas');cv.width=W;cv.height=H;x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);pages.push(cv);y=M;
-    if(first){if(logo){const s=Math.min(110/logo.width,110/logo.height,1.5),lw=logo.width*s,lh=logo.height*s;x.drawImage(logo,RTL?W-M-lw:M,y,lw,lh)}
-      const tx=M+(logo?130:0);T(shopName(),tx,y+36,{s:36,w:700});let yy=y+36;
-      for(const l of [sh.activity,[sh.address,sh.phone?(tr('الهاتف','Tél')+': '+sh.phone):''].filter(Boolean).join(' · '),[['RC',sh.rc],['NIF',sh.nif],['NIS',sh.nis],['AI',sh.ai]].filter(v=>v[1]).map(v=>v[0]+': '+v[1]).join(' · ')].filter(Boolean)){yy+=30;T(l,tx,yy,{s:19,c:'#555'})}
-      T(blTitle(),W-M,y+40,{s:40,w:700,c:'#17635e',a:'end'});T(tr('رقم','N°')+' '+b.num,W-M,y+78,{s:21,w:700,a:'end'});T(tr('بتاريخ','Du')+' '+fdateTxt(b.date),W-M,y+108,{s:20,c:'#333',a:'end'});
-      if(full){T('🔒 '+tr('نسختك الكاملة · ما تتبعثش للزبون','Copie interne · ne pas envoyer'),W-M,y+138,{s:17,c:'#9a6a00',a:'end',w:600})}
-      y=Math.max(yy,y+(full?140:116))+22;L(M,y,W-M,y,'#17635e',4);y+=24;
+    if(first){y=pdfHead({x,T,L,W,M,RTL,y,logo,sh});y+=40;
+      T(blTitle(),M,y,{s:34,w:700,c:'#1b5fae'});T(tr('رقم','N°')+' '+b.num+' · '+fdateTxt(b.date),W-M,y,{s:21,w:600,c:'#333',a:'end'});
+      if(full){y+=30;T('🔒 '+tr('نسختك الكاملة · ما تتبعثش للزبون','Copie interne · ne pas envoyer'),W-M,y,{s:17,c:'#9a6a00',a:'end',w:600})}
+      y+=24;
       const rows=[[tr('الزبون','Client')+': '+(b.cname||tr('زبون','Client')),b.cphone?tr('الهاتف','Tél')+': '+b.cphone:'']];
       const extra=[];if(I.addr)extra.push(tr('العنوان / بلاصة التركيب','Adresse / chantier')+': '+I.addr);if(I.ap)extra.push(tr('التركيب','Pose')+': '+fdateTxt(I.ap.date)+(I.ap.time?' · '+I.ap.time:''));
       const boxH=26+38+(extra.length?Math.ceil(extra.length/2)*36:0)+10;R(M,y,W-2*M,boxH,'#f3f7f6');
@@ -5302,9 +5295,9 @@ async function blPages(id,full){const b=S.bons[id];if(!b)throw 0;const sh=S.shop
     else{T(blTitle()+' '+b.num+' ('+tr('تابع','suite')+')',M,y+26,{s:21,w:700,c:'#333'});y+=48}};
   page(true);const bottom=H-M-60;
   /* الزجاج */
-  if(G.length){T(tr('الزجاج','Verre'),M,y+6,{s:24,w:700,c:'#17635e'});y+=22;
+  if(G.length){T(tr('الزجاج','Verre'),M,y+6,{s:24,w:700,c:'#1b5fae'});y+=22;
     const C=full?{t:[M,M+230],m:[M+240,W-M-430],a:[W-M-420,W-M-290],p:[W-M-280,W-M-150],v:[W-M-140,W-M]}:{t:[M,M+260],m:[M+270,W-M-130],c:[W-M-120,W-M]};
-    const hd=()=>{R(M,y,W-2*M,46,'#eef5f3');L(M,y+46,W-M,y+46,'#bbb',2);const o={s:19,w:700,c:'#333'};T(tr('النوع','Type'),C.t[0]+8,y+31,o);T(tr('القياسات (العرض×الطول سم × العدد)','Mesures (L×H cm × qté)'),C.m[0]+8,y+31,o);
+    const hd=()=>{R(M,y,W-2*M,46,'#eef3fa');L(M,y+46,W-M,y+46,'#bbb',2);const o={s:19,w:700,c:'#333'};T(tr('النوع','Type'),C.t[0]+8,y+31,o);T(tr('القياسات (العرض×الطول سم × العدد)','Mesures (L×H cm × qté)'),C.m[0]+8,y+31,o);
       if(full){T(tr('المساحة','Surface'),C.a[0]+8,y+31,o);T(tr('سعر م²','Prix m²'),C.p[0]+8,y+31,o);T(tr('المبلغ','Montant'),C.v[0]+8,y+31,o)}else T(tr('القطع','Pièces'),C.c[0]+8,y+31,o);y+=58};
     hd();
     for(const g of G){const nm=wrap(g.name,C.t[1]-C.t[0]-14,{s:22,w:700}),ms=wrapItems(g.items,C.m[1]-C.m[0]-14,{s:20,ltr:true}),n=Math.max(nm.length,ms.length+(full?1:0)),hgt=24+n*30+12;
@@ -5325,7 +5318,7 @@ async function blPages(id,full){const b=S.bons[id];if(!b)throw 0;const sh=S.shop
   const tl=full?[[tr('الزجاج','Verre'),I.sumG],[tr('السلع','Articles'),I.sumA],[tr('الخدمات','Services'),I.sumS],...(num(b.disc)>0?[[tr('التخفيض','Remise'),-num(b.disc)]]:[])].filter(r=>Math.abs(r[1])>0.5):[];
   if(y+tl.length*34+200+words.length*30+cond.length*28>bottom)page(false);
   const bx=W-M-520;y+=14;for(const [l,v] of tl){T(l,bx,y,{s:20,c:'#333'});T((v<0?'−':'')+grpTxt(Math.abs(v))+' '+CUR(),W-M,y,{s:20,a:'end'});y+=34}
-  L(bx,y-14,W-M,y-14,'#17635e',3);y+=24;T(tr('المجموع','Total'),bx,y,{s:32,w:700});T(grpTxt(b.total)+' '+CUR(),W-M,y,{s:32,w:700,a:'end'});y+=46;
+  L(bx,y-14,W-M,y-14,'#1b5fae',3);y+=24;T(tr('المجموع','Total'),bx,y,{s:32,w:700});T(grpTxt(b.total)+' '+CUR(),W-M,y,{s:32,w:700,a:'end'});y+=46;
   if(I.paid>0.5){T(tr('دفع','Payé'),bx,y,{s:21,c:'#333'});T(grpTxt(I.paid)+' '+CUR(),W-M,y,{s:21,a:'end'});y+=36}
   if(I.rem>0.5){T(tr('الباقي','Reste'),bx,y,{s:24,w:700,c:'#b0392d'});T(grpTxt(I.rem)+' '+CUR(),W-M,y,{s:24,w:700,c:'#b0392d',a:'end'});y+=40}
   else{T('✓ '+tr('خالص','Payé intégralement'),bx,y,{s:22,w:700,c:'#22703e'});y+=38}
@@ -5344,9 +5337,9 @@ async function blPages(id,full){const b=S.bons[id];if(!b)throw 0;const sh=S.shop
   const nm=String(custName(b)||'client').replace(/[\\/:*?"<>|\s]+/g,'-');return new File([f],`${blFull?'BL-complet':'bon-livraison'}-${b.num}-${nm}.pdf`,{type:'application/pdf'})}}
 /* ---- الطباعة (A4 والتيكي) ---- */
 function blHTML(id,full,tk){const b=S.bons[id];if(!b)return'';const sh=S.shop||{},I=blInfo(id,b),G=blGroups(b),e=esc;
-  const css=`<style>.bl{font-family:inherit;color:#111;direction:${isFr()?'ltr':'rtl'};padding:${tk?'0':'10mm'};font-size:${tk?'11px':'13px'}}.bl table{width:100%;border-collapse:collapse}.bl th{background:#eef5f3;text-align:start;padding:5px 6px;font-size:.9em}.bl td{padding:6px;border-bottom:1px solid #e3e3e3;vertical-align:top}.bl .n{text-align:end;white-space:nowrap}.bl .ms{direction:ltr;text-align:start;color:#333;font-size:.92em;line-height:1.7}.bl .ms span{display:inline-block;margin-inline-end:10px}.bl .hd{display:flex;justify-content:space-between;gap:10px;border-bottom:3px solid #17635e;padding-bottom:8px;margin-bottom:10px;${tk?'flex-direction:column':''}}.bl .cl{background:#f3f7f6;border-radius:8px;padding:8px 10px;margin-bottom:10px;display:grid;grid-template-columns:${tk?'1fr':'1fr 1fr'};gap:4px}.bl .tot div{display:flex;justify-content:space-between;padding:3px 0}.bl .big{font-size:1.4em;font-weight:700;border-top:2px solid #17635e;padding-top:6px}.bl .mine{background:#fff8e6;border:1.5px dashed #e0b34a;border-radius:8px;padding:6px;margin:8px 0}.bl .ft{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid #ddd;margin-top:14px;padding-top:10px}.bl .sig{width:${tk?'120px':'200px'};height:${tk?'50px':'70px'};border:1.5px dashed #aaa;border-radius:8px;display:grid;place-items:center;color:#888}</style>`;
+  const css=`<style>.bl{font-family:inherit;color:#111;direction:${isFr()?'ltr':'rtl'};padding:${tk?'0':'10mm'};font-size:${tk?'11px':'13px'}}.bl table{width:100%;border-collapse:collapse}.bl th{background:#eef3fa;text-align:start;padding:5px 6px;font-size:.9em}.bl td{padding:6px;border-bottom:1px solid #e3e3e3;vertical-align:top}.bl .n{text-align:end;white-space:nowrap}.bl .ms{direction:ltr;text-align:start;color:#333;font-size:.92em;line-height:1.7}.bl .ms span{display:inline-block;margin-inline-end:10px}.bl .hd{display:flex;justify-content:space-between;gap:10px;border-bottom:3px solid #1b5fae;padding-bottom:8px;margin-bottom:10px;${tk?'flex-direction:column':''}}.bl .cl{background:#f3f7f6;border-radius:8px;padding:8px 10px;margin-bottom:10px;display:grid;grid-template-columns:${tk?'1fr':'1fr 1fr'};gap:4px}.bl .tot div{display:flex;justify-content:space-between;padding:3px 0}.bl .big{font-size:1.4em;font-weight:700;border-top:2px solid #1b5fae;padding-top:6px}.bl .mine{background:#fff8e6;border:1.5px dashed #e0b34a;border-radius:8px;padding:6px;margin:8px 0}.bl .ft{display:flex;justify-content:space-between;align-items:flex-end;border-top:1px solid #ddd;margin-top:14px;padding-top:10px}.bl .sig{width:${tk?'120px':'200px'};height:${tk?'50px':'70px'};border:1.5px dashed #aaa;border-radius:8px;display:grid;place-items:center;color:#888}</style>`;
   return `${css}<div class="bl"><div class="hd"><div><b style="font-size:1.6em">${e(shopName())}</b>${sh.activity?`<div>${e(sh.activity)}</div>`:''}<div style="color:#555">${e([sh.address,sh.phone].filter(Boolean).join(' · '))}</div>${[['RC',sh.rc],['NIF',sh.nif],['NIS',sh.nis],['AI',sh.ai]].filter(v=>v[1]).length?`<div style="color:#777;font-size:.9em" dir="ltr">${e([['RC',sh.rc],['NIF',sh.nif],['NIS',sh.nis],['AI',sh.ai]].filter(v=>v[1]).map(v=>v[0]+': '+v[1]).join(' · '))}</div>`:''}</div>
-   <div style="text-align:end"><b style="font-size:1.7em;color:#17635e">${blTitle()}</b><div>${tr('رقم','N°')} <b>${e(b.num)}</b> · ${fdate(b.date)}</div>${full?`<div style="color:#9a6a00;font-weight:700">🔒 ${tr('نسختك الكاملة','Copie interne')}</div>`:''}</div></div>
+   <div style="text-align:end"><b style="font-size:1.7em;color:#1b5fae">${blTitle()}</b><div>${tr('رقم','N°')} <b>${e(b.num)}</b> · ${fdate(b.date)}</div>${full?`<div style="color:#9a6a00;font-weight:700">🔒 ${tr('نسختك الكاملة','Copie interne')}</div>`:''}</div></div>
   <div class="cl"><div>${tr('الزبون','Client')}: <b>${e(b.cname||tr('زبون','Client'))}</b></div>${b.cphone?`<div>${tr('الهاتف','Tél')}: <b dir="ltr">${e(b.cphone)}</b></div>`:''}${I.addr?`<div>${tr('العنوان','Adresse')}: <b>${e(I.addr)}</b></div>`:''}${I.ap?`<div>${tr('التركيب','Pose')}: <b>${fdate(I.ap.date)}${I.ap.time?' · '+e(I.ap.time):''}</b></div>`:''}</div>
   ${G.length?`<table><thead><tr><th>${tr('النوع','Type')}</th><th>${tr('القياسات (سم)','Mesures (cm)')}</th>${full?`<th class="n">${tr('م²','m²')}</th><th class="n">${tr('سعر م²','Prix m²')}</th><th class="n">${tr('المبلغ','Montant')}</th>`:`<th class="n">${tr('القطع','Pièces')}</th>`}</tr></thead><tbody>
    ${G.map(g=>`<tr><td><b>${e(g.name)}</b></td><td><div class="ms">${g.items.map(t=>`<span>${e(t)}</span>`).join('')}</div>${full?`<small style="color:#888">${g.pcs} ${tr('قطعة','pcs')}</small>`:''}</td>${full?`<td class="n">${(Math.round(g.area*100)/100).toFixed(2)}</td><td class="n">${grp(g.price)}</td><td class="n"><b>${grp(g.amt)}</b></td>`:`<td class="n"><b>${g.pcs}</b></td>`}</tr>`).join('')}</tbody></table>`:''}
@@ -5715,15 +5708,13 @@ async function purPages(g){const sh=S.shop||{},RTL=!isFr(),W=1240,H=1754,M=72,FO
   const Rc=(x1,y1,w,h,c)=>{x.fillStyle=c;const a=X(x1),b=X(x1+w);x.fillRect(Math.min(a,b),y1,Math.abs(b-a),h)};
   const defs=[['n','#',50],['name',tr('الصنف','Article'),330],['qty',tr('الكمية','Qté'),170],['dim',tr('المقاس (سم)','Dim. (cm)'),190],['price',tr('السعر','Prix'),180],['amt',tr('المبلغ','Montant'),0]];
   let cx=M;const C={};for(const [k,l,w] of defs){const ww=w||(W-M-cx);C[k]=[cx,cx+ww,l];cx+=ww}
-  const head=()=>{Rc(M,y,W-2*M,48,'#eef5f3');L(M,y+48,W-M,y+48,'#bbb',2);for(const k in C)T(C[k][2],C[k][0]+8,y+32,{s:19,w:700,c:'#333'});y+=60};
+  const head=()=>{Rc(M,y,W-2*M,48,'#eef3fa');L(M,y+48,W-M,y+48,'#bbb',2);for(const k in C)T(C[k][2],C[k][0]+8,y+32,{s:19,w:700,c:'#333'});y+=60};
   const page=first=>{cv=document.createElement('canvas');cv.width=W;cv.height=H;x=cv.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,W,H);pages.push(cv);y=M;
-    if(first){if(logo){const s=Math.min(150/logo.width,100/logo.height,1.5),lw=logo.width*s,lh=logo.height*s;x.drawImage(logo,RTL?M:W-M-lw,y,lw,lh)}
-      T(shopName(),M,y+34,{s:34,w:700});let yy=y+34;for(const l of [sh.activity,sh.address,sh.phone?(tr('الهاتف','Tél')+': '+sh.phone):''].filter(Boolean)){yy+=30;T(l,M,yy,{s:19,c:'#555'})}
-      y=Math.max(yy,y+(logo?100:0))+26;L(M,y,W-M,y,'#17635e',3);y+=46;T(purTitle(g),M,y,{s:32,w:700});T(fdateTxt(g.date),W-M,y,{s:20,c:'#444',a:'end'});
+    if(first){y=pdfHead({x,T,L,W,M,RTL,y,logo,sh});y+=46;T(purTitle(g),M,y,{s:32,w:700});T(fdateTxt(g.date),W-M,y,{s:20,c:'#444',a:'end'});
       if(g.sname){y+=40;T(tr('المورّد','Fournisseur')+': '+g.sname,M,y,{s:24,w:700})}y+=34}
     else{T(purTitle(g)+' ('+tr('تابع','suite')+')',M,y+26,{s:21,w:700,c:'#333'});y+=48}head()};
   page(true);const bottom=H-M-50;
-  g.items.map(purRow).forEach((r,i)=>{if(y+56>bottom)page(false);const b0=y+28;if(i%2)Rc(M,y,W-2*M,50,'#f8fbfa');
+  g.items.map(purRow).forEach((r,i)=>{if(y+56>bottom)page(false);const b0=y+28;if(i%2)Rc(M,y,W-2*M,50,'#f7f9fc');
     T(i+1,C.n[0]+8,b0,{s:19,c:'#666',ltr:true});T(r.name,C.name[0]+8,b0,{s:21,w:600});T(r.qty,C.qty[0]+8,b0,{s:21});T(r.dim,C.dim[0]+8,b0,{s:21,ltr:true});T(r.price,C.price[0]+8,b0,{s:21,ltr:true});T(grpTxt(r.amt),C.amt[0]+8,b0,{s:21,w:700,ltr:true});
     y+=50;L(M,y,W-M,y,'#e2e2e2')});
   const tl=[[tr('المجموع','Total'),g.total,1]];if(g.sid){tl.push([tr('المدفوع','Payé'),g.paid]);tl.push([tr('الباقي','Reste'),g.total-g.paid])}
@@ -5824,7 +5815,7 @@ function bvHTML(id,b){const walk=b.walkin,c=S.clients[b.clientId]||{name:b.cname
     <button class="bvcust" data-act="${walk?'open-wp':'open-client'}" data-id="${esc(walk?pkey(b.cname,b.cphone):b.clientId)}"><span class="av">${esc(initial(nm))}</span><span><b>${esc(nm)}</b><small>${ph?`<bdi dir="ltr">${esc(ph)}</bdi> · `:''}${fdt(b.date,b.createdAt)}${b.editedAt?' · '+tr('عُدّلت','modifiée'):''}</small></span></button>
     ${b.note?`<div class="note">📝 ${esc(b.note)}</div>`:''}</div>
   ${st?'':`<div class="bvtabs"><button data-act="bv-tab" data-v="c" class="${!mine?'on c':''}">📤 ${tr('فاتورة الزبون','Copie client')}</button><button data-act="bv-tab" data-v="m" class="${mine?'on m':''}">🔒 ${tr('فاتورتي','Ma copie')}</button></div>`}
-  <div class="bvpw ${mine?'m':''}"><span class="bvtag">${mine?'🔒 '+tr('فاتورتي (ما تتبعثش للزبون)','Ma copie (ne pas envoyer)'):'👁️ '+tr('هكذا يشوفها الزبون','Ce que voit le client')}</span><div id="bvprev" class="bvprev"><p class="note" style="text-align:center;padding:30px 0">${tr('جارٍ تحضير المعاينة…','Préparation de l’aperçu…')}</p></div></div>
+  <div class="bvpw ${mine?'m':''}">${mine?`<span class="bvtag">🔒 ${tr('فاتورتي (ما تتبعثش للزبون)','Ma copie (ne pas envoyer)')}</span>`:''}<div id="bvprev" class="bvprev"><p class="note" style="text-align:center;padding:30px 0">${tr('جارٍ تحضير المعاينة…','Préparation de l’aperçu…')}</p></div></div>
   <div class="bvacts ${mine?'m':''}"><button data-act="bv-print" data-id="${id}"><i>🖨️</i>${tr('طباعة','Imprimer')}</button><button data-act="bv-share" data-id="${id}"><i>📤</i>${tr('مشاركة','Partager')}</button><button data-act="bv-save" data-id="${id}"><i>⬇️</i>${tr('حفظ PDF','PDF')}</button>${st?'':`<button data-act="edit-bon" data-id="${id}"><i>✏️</i>${tr('تعديل','Modifier')}</button>`}</div>
   ${bvPayHTML(id,b)}
   ${bonPhotoHTML(id,b)}
@@ -6024,6 +6015,15 @@ document.addEventListener('click',async e=>{const b=e.target.closest('[data-act]
   if(b.dataset.act==='cloud-sync'){e.stopPropagation();if(!Sync.uid)return toast(syncText());if(!navigator.onLine)return toast(tr('ما كاين أنترنت.','Pas de connexion.'));
     b.disabled=true;const n=await fullSync();b.disabled=false;toast(n===null?syncText():n?tr(`تمت المزامنة الكاملة: ${n} تغيير.`,`Synchro complète : ${n} changement(s).`):tr('تمت المزامنة: كل شيء مطابق.','Synchronisé : tout est identique.'))}},true);
 
+/* ---- v66: رأس موحّد للوثائق PDF ---- */
+function pdfHead(o){const{x,T,L,W,M,RTL,logo,sh}=o;let y=o.y;const ACC='#1b5fae';
+  let lw=0,lh=0;if(logo){const s=Math.min(120/logo.width,120/logo.height,1.6);lw=logo.width*s;lh=logo.height*s;
+    x.save();x.beginPath();const lx=RTL?M:W-M-lw;const r=18;x.moveTo(lx+r,y);x.arcTo(lx+lw,y,lx+lw,y+lh,r);x.arcTo(lx+lw,y+lh,lx,y+lh,r);x.arcTo(lx,y+lh,lx,y,r);x.arcTo(lx,y,lx+lw,y,r);x.closePath();x.clip();x.drawImage(logo,lx,y,lw,lh);x.restore()}
+  T(shopName(),M,y+40,{s:38,w:700,c:ACC});let yy=y+40;
+  const rows=[sh.activity,[sh.address,sh.phone?('☎ '+sh.phone):''].filter(Boolean).join('   ·   '),[['RC',sh.rc],['NIF',sh.nif],['NIS',sh.nis],['AI',sh.ai]].filter(v=>v[1]).map(v=>v[0]+': '+v[1]).join(' · ')].filter(Boolean);
+  rows.forEach((l,i)=>{yy+=i===0?32:28;T(l,M,yy,{s:i===0?21:19,c:i===0?'#333':'#555',w:i===0?600:400})});
+  y=Math.max(yy,y+lh)+24;L(M,y,W-M,y,ACC,4);return y}
+
 function backupFile(){const data={app:'daftar-zujaj',version:2,exportedAt:new Date().toISOString(),docs:LocalDB.dump()};return new File([JSON.stringify(data)],`tumayd-backup-${today()}.json`,{type:'application/json'})}
 function downloadFile(f){const u=URL.createObjectURL(f);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
 async function copyText(txt,fallbackSel){
@@ -6099,6 +6099,7 @@ document.addEventListener('click',async e=>{
   if(a==='nav-search'){return go('search')}
   if(a==='nav-events')return go('events');
   if(a==='sh-logo-rm'){shopDraft.logo='';return render()}
+  if(a==='sh-logo-app'){shopDraft.logo='';toast(tr('سيُستعمل شعار التطبيق في الفواتير.','Le logo de l’app sera utilisé.'));return render()}
   if(a==='stk-tab'){stkTab=b.dataset.v;if(b.dataset.go)return go('stock');return render()}
   if(a==='art-cat'){artCat=b.dataset.v;return render()}
   if(a==='open-art')return go('art',{id});
