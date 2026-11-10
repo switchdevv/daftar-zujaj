@@ -970,7 +970,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=79; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=80; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6580,7 +6580,7 @@ PAGES: ${pg}
 Rules: dimensions are centimeters. Algerians often count money in centimes: "مليون/ملاين" = 10000 DA each ("خمسة ملاين" = 50000). Otherwise amounts are dinars unless they say سنتيم. Quantity words: زوج=2. If nothing fits, use "c":"".`}
 async function vrGemini(b64){const key=gKey();const tried=[];let models=[localStorage.getItem('gg-gmodel'),'gemini-flash-latest','gemini-2.5-flash','gemini-2.0-flash'].filter((x,i,a)=>x&&a.indexOf(x)===i);
   for(const m of models){tried.push(m);const ctl=new AbortController(),to=setTimeout(()=>ctl.abort(),30000);let r;
-    try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json'},
+    try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${m}:generateContent`,{method:'POST',signal:ctl.signal,headers:{'Content-Type':'application/json','x-goog-api-key':key},
       body:JSON.stringify({contents:[{role:'user',parts:[{text:vrPrompt()},{inline_data:{mime_type:'audio/wav',data:b64}}]}],generationConfig:{temperature:0,responseMimeType:'application/json'}})})}
     catch(e){clearTimeout(to);throw{k:'net'}}clearTimeout(to);
     if(r.status===404)continue;if(r.status===429)throw{k:'rate'};if(r.status===400||r.status===401||r.status===403){let j={};try{j=await r.json()}catch(_){}const msg=String((j.error&&j.error.message)||'');if(/model/i.test(msg)&&!/key/i.test(msg))continue;throw{k:'key',msg}}
@@ -6596,11 +6596,11 @@ async function vrProcess(blob){if(!$('.vxsheet'))vxOpen(true);const s=$('#vx-sai
 /* المفتاح */
 function vxKeyCard(){const r=$('#vx-res');if(!r)return;if(isStaff()){r.innerHTML=`<div class="vxcard"><b>🔑 ${tr('الصوت الذكي ما زال ما تفعّلش.','Assistant vocal non configuré.')}</b><p class="note">${tr('اطلب من صاحب المحل يربط Gemini من هاتفو.','Demandez au gérant de le configurer.')}</p></div>`;return}
   r.innerHTML=`<div class="vxcard vxkey"><b>✨ ${tr('فعّل الصوت الذكي (Gemini) — مرة وحدة','Activer l’assistant (Gemini) — une seule fois')}</b>
-  <ol><li>${tr('حلّ هذا الرابط وادخل بحساب Gmail:','Ouvrez ce lien avec votre compte Gmail :')} <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">aistudio.google.com/app/apikey</a></li><li>${tr('اضغط «Create API key» ← انسخ المفتاح (يبدا بـ AIza).','« Create API key » puis copiez la clé (AIza…).')}</li><li>${tr('ارجع هنا والصقو تحت ← «حفظ».','Collez-la ici puis « Enregistrer ».')}</li></ol>
-  <input id="vx-key" dir="ltr" placeholder="AIza…" value="${esc(gKey())}" autocomplete="off"><div class="vxbtns"><button type="button" class="btn" data-vx="savekey">${tr('حفظ وتجربة','Enregistrer et tester')}</button>${gKey()?`<button type="button" class="btn plain" data-vx="delkey">${tr('نحّي المفتاح','Supprimer')}</button>`:''}</div><p class="note" id="vx-keymsg">${tr('المفتاح يتحفظ في الدفتر تاع المحل برك، ويخدم في كل الأجهزة.','La clé reste dans le registre du magasin.')}</p></div>`}
-async function vxSaveKey(){const i=$('#vx-key'),msg=$('#vx-keymsg');const k=(i&&i.value||'').trim();if(!/^AIza[\w-]{20,}$/.test(k)){if(msg)msg.textContent=tr('المفتاح لازم يبدا بـ AIza. انسخو كامل.','La clé doit commencer par AIza.');return}
+  <ol><li>${tr('حلّ هذا الرابط وادخل بحساب Gmail:','Ouvrez ce lien avec votre compte Gmail :')} <a href="https://aistudio.google.com/app/apikey" target="_blank" rel="noopener">aistudio.google.com/app/apikey</a></li><li>${tr('اضغط «Create API key» ولا «Copier la clé» ← انسخ المفتاح كامل.','« Create API key » / « Copier la clé ».')}</li><li>${tr('ارجع هنا والصقو تحت ← «حفظ».','Collez-la ici puis « Enregistrer ».')}</li></ol>
+  <input id="vx-key" dir="ltr" placeholder="AIza… / AQ.…" value="${esc(gKey())}" autocomplete="off"><div class="vxbtns"><button type="button" class="btn" data-vx="savekey">${tr('حفظ وتجربة','Enregistrer et tester')}</button>${gKey()?`<button type="button" class="btn plain" data-vx="delkey">${tr('نحّي المفتاح','Supprimer')}</button>`:''}</div><p class="note" id="vx-keymsg">${tr('المفتاح يتحفظ في الدفتر تاع المحل برك، ويخدم في كل الأجهزة.','La clé reste dans le registre du magasin.')}</p></div>`}
+async function vxSaveKey(){const i=$('#vx-key'),msg=$('#vx-keymsg');const k=(i&&i.value||'').replace(/\s+/g,'');if(!/^[\w.\-]{20,}$/.test(k)){if(msg)msg.textContent=tr('المفتاح ماشي كامل. اضغط «Copier la clé» والصقو مرة أخرى.','Clé incomplète. Recopiez-la.');return}
   if(msg)msg.innerHTML=`<span class="vxspin"></span> ${tr('راني نجرّب المفتاح…','Test de la clé…')}`;
-  try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models?key=${encodeURIComponent(k)}`);if(!r.ok){if(msg)msg.textContent=r.status===400||r.status===403?tr('Google رفض المفتاح. تأكد بلّي نسختو كامل.','Clé refusée par Google.'):tr('ما قدرتش نجرّب، تأكد من الأنترنت.','Test impossible.')+' ('+r.status+')';return}}
+  try{const r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models`,{headers:{'x-goog-api-key':k}});if(!r.ok){if(msg)msg.textContent=r.status===400||r.status===403?tr('Google رفض المفتاح. تأكد بلّي نسختو كامل.','Clé refusée par Google.'):tr('ما قدرتش نجرّب، تأكد من الأنترنت.','Test impossible.')+' ('+r.status+')';return}}
   catch(_){if(msg)msg.textContent=tr('ما كاينش أنترنت.','Pas de connexion.');return}
   if(await write(()=>db.doc('settings/voice').set({gkey:k,at:Date.now(),by:curName()}),tr('✨ الصوت الذكي تفعّل!','✨ Assistant activé !'))){vxGemMode();vxRes(`<div class="vxcard"><b>✅ ${tr('تفعّل! احبس على المايك وهدر.','Activé ! Maintenez le micro et parlez.')}</b>${vxExamples()}</div>`)}}
 /* وضع Gemini في النافذة */
