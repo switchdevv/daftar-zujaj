@@ -932,7 +932,7 @@ body.vrec .vxsheet.gem .vxmic{background:#e0362c;transform:scale(1.15)}
 .pcbig{font-size:1.05rem;color:var(--accent)} .pcwarn{border-radius:10px;padding:7px 10px;font-weight:700;font-size:.82rem} .pcwarn.hi{background:var(--debt-soft);color:var(--debt)} .pcwarn.lo{background:var(--warn-soft);color:var(--warn)}
 .pcok{background:var(--ok-soft);color:var(--ok);border-radius:10px;padding:7px 10px;font-weight:700;font-size:.82rem}
 .pcsum{display:grid;gap:6px;border-top:1px dashed var(--line);padding-top:8px;font-size:.84rem} .pcsum b{text-align:end}
-.pvslide{position:relative;display:flex;align-items:center;gap:8px;width:250px;max-width:100%;height:44px;padding:4px;border-radius:99px;background:var(--sunk);border:1px solid var(--line);color:var(--muted);font-size:.8rem;font-weight:700;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;overflow:hidden}
+.pvslide{position:relative;display:flex;align-items:center;gap:8px;width:124px;max-width:100%;height:44px;padding:4px;border-radius:99px;background:var(--sunk);border:1px solid var(--line);color:var(--muted);font-size:.8rem;font-weight:700;touch-action:none;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;overflow:hidden}
 .pvslide .pvk{width:36px;height:36px;border-radius:50%;background:var(--surface);box-shadow:0 1px 4px rgba(0,0,0,.18);display:grid;place-items:center;font-size:1rem;z-index:1;cursor:grab;flex-shrink:0}
 .pvslide .pvt{flex:1;text-align:center;opacity:calc(1 - var(--p,0) * 1.4);padding-inline-end:12px;background:linear-gradient(90deg,var(--muted) 35%,var(--faint) 50%,var(--muted) 65%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:pvsh 2.6s linear infinite}
 @keyframes pvsh{from{background-position:100% 0}to{background-position:0 0}}
@@ -959,6 +959,14 @@ body.vrec .vxsheet.gem .vxmic{background:#e0362c;transform:scale(1.15)}
 .crow2 .cmain small{font-size:.78rem;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .crow2 .cside{display:flex;flex-direction:column;align-items:flex-end;gap:4px;flex-shrink:0}
 .crow2 .chev{color:var(--faint);flex-shrink:0;display:grid}.crow2 .chev svg{width:16px;height:16px}
+.bvopts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}.bvopts .note{font-size:.8rem}
+.bvopts button{border:1.5px solid var(--line);background:var(--surface);color:var(--muted);border-radius:99px;padding:6px 14px;font:inherit;font-size:.84rem;font-weight:700;cursor:pointer}
+.bvopts button.on{background:var(--accent);color:var(--accent-ink);border-color:transparent}
+.bvdet{display:inline-flex!important;align-items:center;gap:9px;padding:7px 14px 7px 10px!important}
+.bvdet .sw{width:36px;height:21px;border-radius:99px;background:var(--sunk);position:relative;flex-shrink:0;transition:background .2s}
+.bvdet .sw i{position:absolute;top:2.5px;inset-inline-start:3px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.25);transition:inset-inline-start .2s}
+.bvdet.on{background:var(--accent-soft)!important;color:var(--accent)!important;border-color:var(--accent)!important}
+.bvdet.on .sw{background:var(--accent)}.bvdet.on .sw i{inset-inline-start:17px}
 </style>
 </head>
 <body>
@@ -1013,7 +1021,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=86; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=90; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -4425,7 +4433,7 @@ async function bonPages(id,kind){
   const L=(x1,y1,x2,y2,c,w)=>{x.strokeStyle=c||'#ccc';x.lineWidth=w||1.5;x.beginPath();x.moveTo(X(x1),y1);x.lineTo(X(x2),y2);x.stroke()};
   const R=(x1,y1,w,h,c)=>{x.fillStyle=c;const a=X(x1),bb=X(x1+w);x.fillRect(Math.min(a,bb),y1,Math.abs(bb-a),h)};
   const lines=b.lines||[],hasUse=lines.some(l=>String(l.use||'').trim()),hasSvc=lines.some(l=>num(l.svcAmt)>0);
-  const defs=[['n','#',44],['type',tr('النوع','Type'),hasUse?220:330],...(hasUse?[['use',tr('الاستعمال','Usage'),150]]:[]),['dim',tr('المقاس (سم)','Dim. (cm)'),165],['qty',tr('العدد','Qté'),82],...(bpFull?[['area',tr('م²','m²'),105]]:[]),...(bpFull||q?[['price',tr('السعر','Prix'),140]]:[]),['amt',tr('المبلغ','Montant'),0]];
+  const defs=[['n','#',44],['type',tr('النوع','Type'),hasUse?220:330],...(hasUse?[['use',tr('الاستعمال','Usage'),150]]:[]),['dim',tr('المقاس (سم)','Dim. (cm)'),165],['qty',tr('العدد','Qté'),82],...(bpFull?[['area',tr('م²','m²'),105]]:[]),...(bpFull||q||bpPrice?[['price',tr('السعر','Prix'),140]]:[]),...(bpKg&&!bpFull?[['kg',tr('الوزن (كغ)','Poids (kg)'),112]]:[]),['amt',tr('المبلغ','Montant'),0]];
   let cx=M;const C={};for(const [k,l,w] of defs){const ww=w||(W-M-cx);C[k]=[cx,cx+ww,l];cx+=ww}
   const head=()=>{R(M,y,W-2*M,48,'#eef3fa');L(M,y+48,W-M,y+48,'#bbb',2);for(const k in C)T(C[k][2],C[k][0]+8,y+32,{s:19,w:700,c:'#333'});y+=60};
   const title=q?tr('عرض سعر رقم','Devis n°'):b.kind==='return'?tr('مرتجع رقم','Avoir n°'):tr('فاتورة رقم','Facture n°');
@@ -4448,13 +4456,13 @@ async function bonPages(id,kind){
     if(!art)T(`${cf1(l.w)} × ${cf1(l.h)}`,C.dim[0]+8,b0,{s:21,ltr:true});
     T(art?`${dec2s(l.qty).replace(/<[^>]+>/g,'')} ${l.unit||''}`:String(l.qty),C.qty[0]+8,b0,{s:21,ltr:!art});if(bpFull&&!art)T((Math.round(num(l.billArea||l.area)*100)/100).toFixed(2),C.area[0]+8,b0,{s:20,ltr:true,c:'#333'});
     
-    if(C.price)T(grpTxt(l.price),C.price[0]+8,b0,{s:21,ltr:true});T(grpTxt(l.amount),C.amt[0]+8,b0,{s:21,w:700,ltr:true});
+    if(C.price)T(grpTxt(l.price),C.price[0]+8,b0,{s:21,ltr:true});if(C.kg&&!art){const kk=kgOf(num(l.area),mmOf(l.typeId));T(kk>0?String(Math.round(kk*10)/10):'—',C.kg[0]+8,b0,{s:20,ltr:true,c:'#333'})}T(grpTxt(l.amount),C.amt[0]+8,b0,{s:21,w:700,ltr:true});
     let yy=b0+(rowsN-1)*28;for(const s of sv){yy+=25;T(s,C.type[0]+8,yy,{s:17,c:'#555'})}
     y=yy+14;L(M,y,W-M,y,'#e2e2e2');y+=8});
   /* المجاميع */
   const atSale=q?0:b.walkin?walkPaidAll(b):shopPaidOn(id),st=!q&&!b.walkin&&S.stats[b.clientId];
   const area=lines.reduce((s,l)=>s+num(l.billArea||l.area),0),kg=bonKg(b);
-  const tl=[];{const pcs=lines.reduce((a,l)=>a+(l.lk==='art'?0:Math.round(num(l.qty)||0)),0);if(pcs>0)tl.push([tr('مجموع القطع','Nombre de pièces'),pcs+' '+tr('قطعة','pièce(s)')])}if(bpFull&&!q){if(area>0)tl.push([tr('المساحة الكلية','Surface totale'),(Math.round(area*100)/100).toFixed(2)+' '+tr('م²','m²')]);if(kg>0)tl.push([tr('الوزن التقريبي','Poids approx.'),Math.round(kg)+' '+tr('كغ','kg')]);const mg=bonMargin(b);tl.push([tr('ربحك (نسختي)','Marge (ma copie)'),grpTxt(mg.m)+' '+CUR()])}
+  const tl=[];{const pcs=lines.reduce((a,l)=>a+(l.lk==='art'?0:Math.round(num(l.qty)||0)),0);if(pcs>0)tl.push([tr('مجموع القطع','Nombre de pièces'),pcs+' '+tr('قطعة','pièce(s)')])}if(bpKg&&!bpFull&&!q&&kg>0)tl.push([tr('الوزن التقريبي','Poids approx.'),Math.round(kg)+' '+tr('كغ','kg')]);if(bpFull&&!q){if(area>0)tl.push([tr('المساحة الكلية','Surface totale'),(Math.round(area*100)/100).toFixed(2)+' '+tr('م²','m²')]);if(kg>0)tl.push([tr('الوزن التقريبي','Poids approx.'),Math.round(kg)+' '+tr('كغ','kg')]);const mg=bonMargin(b);tl.push([tr('ربحك (نسختي)','Marge (ma copie)'),grpTxt(mg.m)+' '+CUR()])}
   if(num(b.disc)>0){tl.push([tr('المجموع قبل التخفيض','Sous-total'),grpTxt(b.sub)+' '+CUR()]);tl.push([tr('التخفيض','Remise'),'−'+grpTxt(b.disc)+' '+CUR()])}
   const tl2=[];if(!q&&b.kind==='sale'){{const fg=b.walkin?fgW(b):0;tl2.push([tr('المدفوع','Payé'),grpTxt(atSale-fg)+' '+CUR()]);if(fg>0)tl2.push([tr('تنازل','Remise accordée'),grpTxt(fg)+' '+CUR()])}tl2.push([tr('الباقي من هذه الفاتورة','Reste sur cette facture'),grpTxt(Math.max(0,num(b.total)-atSale))+' '+CUR()]);if(st)tl2.push([tr('رصيد الحساب الكلي','Solde total du compte'),grpTxt(st.bal)+' '+CUR()])}
   const words=wrap((q?tr('أُوقف هذا العرض على مبلغ','Arrêté le présent devis à la somme de'):tr('أُوقفت هذه الفاتورة على مبلغ','Arrêtée la présente facture à la somme de'))+': '+amountWords(b.total),W-2*M,{s:20});
@@ -5977,7 +5985,7 @@ function bvHTML(id,b){const walk=b.walkin,c=S.clients[b.clientId]||{name:b.cname
   <div class="bvh"><div class="rowflex between"><h2 style="margin:0">${title} <bdi dir="ltr">${b.num}</bdi></h2>${rem>0.5?`<span class="chip bad">${tr('مديون','Doit')} ${grp(rem)}</span>`:`<span class="chip ok">✓ ${tr('خالص','Payé')}</span>`}</div>
     <button class="bvcust" data-act="${walk?'open-wp':'open-client'}" data-id="${esc(walk?pkey(b.cname,b.cphone):b.clientId)}"><span class="av">${esc(initial(nm))}</span><span><b>${esc(nm)}</b><small>${ph?`<bdi dir="ltr">${esc(ph)}</bdi> · `:''}${fdt(b.date,b.createdAt)}${b.editedAt?' · '+tr('عُدّلت','modifiée'):''}</small></span></button>
     ${b.note?`<div class="note">📝 ${esc(b.note)}</div>`:''}</div>
-  ${st?'':`<div class="bvtabs"><button data-act="bv-tab" data-v="c" class="${!mine?'on c':''}">📤 ${tr('فاتورة الزبون','Copie client')}</button><button data-act="bv-tab" data-v="m" class="${mine?'on m':''}">🔒 ${tr('فاتورتي','Ma copie')}</button></div>`}
+  ${st?'':`<div class="bvtabs"><button data-act="bv-tab" data-v="c" class="${!mine?'on c':''}">📤 ${tr('فاتورة الزبون','Copie client')}</button><button data-act="bv-tab" data-v="m" class="${mine?'on m':''}">🔒 ${tr('فاتورتي','Ma copie')}</button></div>`}${mine?'':bvOptsHTML(id)}
   <div class="bvpw ${mine?'m':''}">${mine?`<span class="bvtag">🔒 ${tr('فاتورتي (ما تتبعثش للزبون)','Ma copie (ne pas envoyer)')}</span>`:''}<div id="bvprev" class="bvprev"><p class="note" style="text-align:center;padding:30px 0">${tr('جارٍ تحضير المعاينة…','Préparation de l’aperçu…')}</p></div></div>
   <div class="bvacts ${mine?'m':''}"><button data-act="bv-print" data-id="${id}"><i>🖨️</i>${tr('طباعة','Imprimer')}</button><button data-act="bv-share" data-id="${id}"><i>📤</i>${tr('مشاركة','Partager')}</button><button data-act="bv-save" data-id="${id}"><i>⬇️</i>${tr('حفظ PDF','PDF')}</button>${st?'':`<button data-act="edit-bon" data-id="${id}"><i>✏️</i>${tr('تعديل','Modifier')}</button>`}</div>
   ${bvPayHTML(id,b)}
@@ -6763,7 +6771,7 @@ const pvMask=()=>`<span class="pvmask" aria-label="${tr('مخفي','masqué')}">
 const pvAmt=(v,cls)=>debtShown?`<span class="amt ${cls||''}">${DA(v)}</span>`:pvMask();
 debtReveal=function(){debtShown=true;clearTimeout(dbHideT);dbHideT=setTimeout(()=>{debtShown=false;if(['home','clients','search'].includes(view.name))render()},120000);render()};
 function pvPill(){return debtShown?`<button type="button" class="pvslide on" data-pv="hide">🔓 ${tr('الديون ظاهرة · اضغط تخبّيها','Montants visibles · touchez pour masquer')}</button>`
-  :`<div class="pvslide" data-pv="drag" role="button" aria-label="${tr('اسحب باش تبان الديون','Glissez pour afficher les montants')}"><span class="pvk">🔒</span><span class="pvt">${tr('اسحب باش تبان الديون','Glissez pour afficher')}</span></div>`}
+  :`<div class="pvslide" data-pv="drag" role="button" aria-label="${tr('اسحب باش تبان الديون','Glissez pour afficher les montants')}"><span class="pvk">🔒</span></div>`}
 let pvd=null;
 document.addEventListener('pointerdown',e=>{const t=e.target.closest&&e.target.closest('[data-pv="drag"]');if(!t)return;const k=t.querySelector('.pvk');if(!k)return;
   pvd={x:e.clientX,id:e.pointerId,t,k,max:Math.max(40,t.clientWidth-k.offsetWidth-10),dx:0};try{t.setPointerCapture(e.pointerId)}catch(_){}k.style.transition='none'},true);
@@ -6828,6 +6836,14 @@ const VOICE_OFF=true;
 {const _vf=vrFab;vrFab=function(){if(VOICE_OFF){const f=$('#vxfab');if(f)f.remove();return}return _vf.apply(this,arguments)}}
 {const _r=render;render=function(){const r=_r.apply(this,arguments);if(VOICE_OFF){const mb=$('#micbtn');if(mb)mb.remove();const f=$('#vxfab');if(f)f.remove()}return r}}
 try{for(let i=SEARCH_PAGES.length-1;i>=0;i--)if(SEARCH_PAGES[i][0]==='voice')SEARCH_PAGES.splice(i,1)}catch(_){}
+
+
+/* ---- v88: إظهار السعر والوزن في فاتورة الزبون (اختياري، مخفيين par défaut) ---- */
+let bpPrice=false,bpKg=false;const bvOpt={};
+function bvOptsHTML(id){const o=bvOpt[id]||{},on=!!(o.p&&o.k);return `<div class="bvopts"><button type="button" data-act="bv-opt" data-v="pk" class="bvdet ${on?'on':''}" aria-pressed="${on}"><span class="sw"><i></i></span>🏷️ ${tr('التفاصيل','Détails')}</button><span class="note">${on?tr('السعر والوزن ظاهرين للزبون','Prix et poids affichés'):tr('يزيد السعر والوزن في فاتورة الزبون','Ajoute prix et poids')}</span></div>`}
+{const _dp=docPages;docPages=async function(id,mine){const o=bvOpt[id]||{};bpPrice=!mine&&!!o.p;bpKg=!mine&&!!o.k;try{return await _dp(id,mine)}finally{bpPrice=false;bpKg=false}}}
+{const _k=bvKey;bvKey=function(id,b,mine){const o=bvOpt[id]||{};return _k(id,b,mine)+(mine?'':'|p'+(o.p?1:0)+'k'+(o.k?1:0))}}
+document.addEventListener('click',e=>{const b=e.target.closest('[data-act="bv-opt"]');if(!b||view.name!=='bonview')return;e.stopPropagation();const o=bvOpt[view.id]||(bvOpt[view.id]={});const on=!(o.p&&o.k);o.p=on;o.k=on;render()},true);
 
 function backupFile(){const data={app:'daftar-zujaj',version:2,exportedAt:new Date().toISOString(),docs:LocalDB.dump()};return new File([JSON.stringify(data)],`tumayd-backup-${today()}.json`,{type:'application/json'})}
 function downloadFile(f){const u=URL.createObjectURL(f);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
