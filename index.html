@@ -1025,7 +1025,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=92; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=93; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -3018,8 +3018,8 @@ function journalHTML(){
   <div class="chips">${ch('t','all',tr('كل الفواتير','Toutes'))}${ch('t','shop',tr('حرفيين','Ateliers'))}${ch('t','walk',tr('زبائن عاديون','Comptoir'))}${ch('t','ret',tr('مرتجعات','Retours'))}${ch('t','opening',tr('ديون قديمة','Anciens crédits'))}</div>
   <div class="chips">${ch('s','all',tr('كل الحالات','Tous états'))}${ch('s','unpaid',tr('غير مسدّدة','Non soldées'))}${ch('s','paid',tr('مسدّدة','Soldées'))}${ch('s','open',tr('قيد التحضير/جاهزة','En cours'))}</div>
   </div>`:''}
-  <div class="tiles"><div class="tile"><span class="lbl">${tr('عدد الفواتير','Nombre')}</span><span class="v"><bdi dir="ltr">${rows.length}</bdi></span></div><div class="tile"><span class="lbl">${tr('المجموع','Total')}</span><span class="v">${DA(tot)}</span></div><div class="tile"><span class="lbl">${tr('الباقي غير المحصَّل','Reste à encaisser')}</span><span class="v" style="color:var(--debt)">${debtShown?DA(rem):pvMask()}</span></div></div>
-  ${rows.length?`<div class="list">${rows.map(([id,b])=>`<button class="jrow" data-act="open-bon" data-id="${id}"><span class="t1">${b.kind==='return'?tr('مرتجع','Retour'):b.kind==='opening'?tr('دين قديم','Ancien crédit'):tr('فاتورة','Facture')} <bdi dir="ltr">${b.num||''}</bdi> · ${esc(custName(b))} ${b.walkin?`<span class="chip warn">${tr('عادي','Comptoir')}</span>`:''}${b.kind==='sale'&&b.status&&b.status!=='done'?stChip(b.status):''}</span><span class="r"><span class="amt ${num(b.total)<0?'pos':''}">${DA(b.total)}</span>${remChipM(id,b)}</span><span class="t2">${fdt(b.date,b.createdAt)}${(b.lines||[]).some(l=>l.lk!=='art')?' · '+(b.lines||[]).filter(l=>l.lk!=='art').reduce((s,l)=>s+num(l.qty),0)+' '+tr('قطعة','pcs'):''}</span></button>`).join('')}</div>`:`<div class="empty"><p>${tr('لا توجد فواتير بهذه الفلاتر.','Aucune facture avec ces filtres.')}</p></div>`}
+  <div class="tiles"><div class="tile"><span class="lbl">${tr('عدد الفواتير','Nombre')}</span><span class="v"><bdi dir="ltr">${rows.length}</bdi></span></div><div class="tile"><span class="lbl">${tr('المجموع','Total')}</span><span class="v">${debtShown?DA(tot):pvMask()}</span></div><div class="tile"><span class="lbl">${tr('الباقي غير المحصَّل','Reste à encaisser')}</span><span class="v" style="color:var(--debt)">${debtShown?DA(rem):pvMask()}</span></div></div>
+  ${rows.length?`<div class="list">${rows.map(([id,b])=>`<button class="jrow" data-act="open-bon" data-id="${id}"><span class="t1">${b.kind==='return'?tr('مرتجع','Retour'):b.kind==='opening'?tr('دين قديم','Ancien crédit'):tr('فاتورة','Facture')} <bdi dir="ltr">${b.num||''}</bdi> · ${esc(custName(b))} ${b.walkin?`<span class="chip warn">${tr('عادي','Comptoir')}</span>`:''}${b.kind==='sale'&&b.status&&b.status!=='done'?stChip(b.status):''}</span><span class="r"><span class="amt ${num(b.total)<0?'pos':''}">${debtShown?DA(b.total):pvMask()}</span>${remChipM(id,b)}</span><span class="t2">${fdt(b.date,b.createdAt)}${(b.lines||[]).some(l=>l.lk!=='art')?' · '+(b.lines||[]).filter(l=>l.lk!=='art').reduce((s,l)=>s+num(l.qty),0)+' '+tr('قطعة','pcs'):''}</span></button>`).join('')}</div>`:`<div class="empty"><p>${tr('لا توجد فواتير بهذه الفلاتر.','Aucune facture avec ces filtres.')}</p></div>`}
   </div>`;
 }
 
