@@ -1004,6 +1004,34 @@ body.vrec .vxsheet.gem .vxmic{background:#e0362c;transform:scale(1.15)}
 .ctfin .e{font-size:3rem;line-height:1}.ctfin h3{margin:0;font-size:1.25rem}
 .ctfin.pop{animation:ctpop .45s ease-out}@keyframes ctpop{from{transform:scale(.9);opacity:.3}to{transform:none;opacity:1}}
 .btn.ctwa{background:var(--ok);color:#fff;border-color:transparent;font-weight:700;min-height:50px;text-decoration:none;display:flex;align-items:center;justify-content:center}
+.ctsheet{background:var(--surface);border:1px solid var(--line);border-radius:16px;padding:16px 14px;color:var(--ink)}
+.cthead{display:flex;justify-content:space-between;align-items:flex-start;gap:10px}
+.ctno{font-size:1.45rem;font-weight:800;color:var(--accent);line-height:1.3}
+.ctln{font-size:1rem;font-weight:700;color:var(--ink);margin-top:2px}.ctln.big{font-size:1.15rem;font-weight:800}
+.ctdt{font-size:.9rem;font-weight:700;color:var(--ink);white-space:nowrap;padding-top:6px}
+.ctprog{margin:12px 0 10px;padding-top:10px;border-top:2px solid var(--accent)}
+.ctcount{font-size:1.05rem;font-weight:800;color:var(--ink)}.ctcount.ok{color:var(--ok)}
+.cttbl{width:100%;border-collapse:collapse;color:var(--ink)}
+.cttbl th{background:color-mix(in srgb,var(--accent) 13%,var(--surface));font-weight:800;font-size:.95rem;padding:10px 6px;text-align:start;color:var(--ink);border-bottom:2px solid color-mix(in srgb,var(--accent) 35%,var(--line))}
+.cttbl th.n,.cttbl td.n{width:26px;text-align:center}.cttbl th.q,.cttbl td.q{text-align:center;width:44px}.cttbl th.tk,.cttbl td.tk{text-align:center;width:56px}
+.cttbl td{padding:12px 6px;border-bottom:1px solid var(--line);vertical-align:middle}
+.ctr{cursor:pointer;-webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent}
+.ctr td.n{font-weight:700;font-size:.95rem;color:var(--muted)}
+.ctr td.ty{font-weight:800;font-size:1.05rem;line-height:1.35}
+.ctr td.dm{font-weight:800;font-size:1.3rem;white-space:nowrap;font-variant-numeric:tabular-nums;letter-spacing:.2px}
+.ctr td.q{font-weight:800;font-size:1.3rem}
+.ctr .cttk{display:flex;flex-direction:column;align-items:center;gap:6px;max-width:none}
+.ctr .cttk i{width:40px;height:40px;border:2.5px solid #9aa6b6}
+.ctr .cttk i.d{border-color:var(--ok)}
+.ctr.done{background:var(--ok-soft)}.ctr.done td.dm,.ctr.done td.ty{text-decoration:line-through;text-decoration-thickness:2px}
+.ctr.next{background:color-mix(in srgb,var(--accent) 9%,var(--surface));box-shadow:inset 0 0 0 2px var(--accent)}
+.ctr .ctnx{display:inline-block;margin-inline-start:6px;vertical-align:middle;font-size:.72rem}
+.ctfoot{display:flex;justify-content:space-between;align-items:center;margin-top:12px;padding-top:10px;border-top:2px solid var(--accent);font-weight:800;font-size:1.05rem}
+.cttbl th{white-space:nowrap}
+.ctsheet{max-width:700px;width:100%;margin-inline:auto}
+.cttbl th.dm,.cttbl td.dm{width:1%;white-space:nowrap;text-align:center;padding-inline:10px}
+.cttbl th.q,.cttbl td.q{padding-inline:8px}
+@media (max-width:480px){.ctsheet{padding:14px 10px}.cttbl td{padding:11px 3px}.cttbl th{font-size:.85rem;padding:9px 3px}.ctr td.dm,.ctr td.q{font-size:1.15rem}.ctr td.ty{font-size:.95rem}.cttbl th.q,.cttbl td.q{width:30px}.cttbl th.tk,.cttbl td.tk{width:44px}.cttbl th.n,.cttbl td.n{width:20px}.ctr .cttk i{width:38px;height:38px}.ctno{font-size:1.3rem}}
 </style>
 </head>
 <body>
@@ -1058,7 +1086,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=94; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=95; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6921,24 +6949,31 @@ function cutChip(id,b){if(!cutPending(b))return'';const s=cutSt(b);return `<span
 /* شاشة القص */
 let ctJust=null;
 function cutViewHTML(){const id=view.id,b=S.bons[id];if(!b)return `<div class="empty"><p>${tr('الفاتورة غير موجودة.','Facture introuvable.')}</p></div>`;
-  const s=cutSt(b),G=cutGroups(b),all=s.n>0&&s.done>=s.n;let nextKey=null;for(const g of G){for(const p of g.items)if(p.done<p.qty){nextKey=p.key;break}if(nextKey)break}
-  const ph=bonPhone(b)||'',wa=ph?waText(ph,readyText(id,b)):'';
+  const s=cutSt(b),G=cutGroups(b),all=s.n>0&&s.done>=s.n,R=[];for(const g of G)for(const p of g.items)R.push(p);
+  const nx=R.find(p=>p.done<p.qty),nextKey=nx?nx.key:null;
+  const c=b.walkin?{}:(S.clients[b.clientId]||{}),ph=bonPhone(b)||'',wa=ph?waText(ph,readyText(id,b)):'';
   const pop=ctJust===id;if(pop)ctJust=null;
   return `<div class="stack ctv">${backBtn('open-bon',tr('الفاتورة','Facture')+' '+(b.num||''),id)}
-  <div class="cttop"><h2 style="margin:0">${esc(custName(b))}</h2><div class="note">${tr('فاتورة','Facture')} <bdi dir="ltr">${b.num||''}</bdi> · ${fdt(b.date,b.createdAt)}</div>
-  ${cutBar(s,true)}<div class="rowflex between"><b class="ctcount ${all?'ok':''}"><bdi dir="ltr">${s.done} / ${s.n}</bdi> ${tr('قطع','pièces')}</b>${all?`<button class="ctmini" data-act="ct-reset" data-id="${id}">↩️ ${tr('رجّع الكل','Tout annuler')}</button>`:`<button class="ctmini" data-act="ct-all" data-id="${id}">✅ ${tr('كلّش تقصّ','Tout découpé')}</button>`}</div></div>
   ${all?`<div class="ctfin ${pop?'pop':''}"><div class="e">🎉</div><h3>${tr('كمّلت القص!','Découpe terminée !')}</h3><div class="note"><bdi dir="ltr">${s.n}/${s.n}</bdi>${b.cutDoneAt?` · <bdi dir="ltr">${hhmm(b.cutDoneAt)}</bdi>`:''}</div>
-    ${wa?`<a class="btn ctwa" href="${wa}" target="_blank" rel="noopener">💬 ${tr('بعثلو بلي واجدة','Prévenir : c’est prêt')}</a>`:''}<button class="btn line full" data-act="open-bon" data-id="${id}">🧾 ${tr('رجوع للفاتورة','Retour à la facture')}</button></div>`:`<p class="note" style="margin:0">${tr('اضغط على القطعة كي تقصها. ضغطة أخرى ترجّعها.','Touchez une pièce quand elle est découpée. Re-touchez pour annuler.')}</p>`}
-  ${G.map(g=>{const gd=g.items.reduce((a,p)=>a+p.done,0),gn=g.items.reduce((a,p)=>a+p.qty,0);
-    return `<div class="ctgrp"><span>${esc(g.type)}</span><span class="${gd>=gn?'ok':''}">${gd>=gn?'✅ ':''}<bdi dir="ltr">${gd}/${gn}</bdi></span></div>
-    ${g.items.map(p=>`<div class="ctpc ${p.done>=p.qty?'done':''} ${p.key===nextKey?'next':''}" data-act="ct-tk" data-id="${id}" data-k="${esc(p.key)}" role="button"><div class="ctdim"><bdi dir="ltr" class="ctd">${cf1(p.w)} × ${cf1(p.h)}</bdi><span class="q"><bdi dir="ltr">×${p.qty}</bdi>${p.key===nextKey?`<span class="ctnx">${tr('التالية','Suivante')}</span>`:''}</span></div>
-      <div class="cttk">${Array.from({length:p.qty},(_,c)=>`<i class="${c<p.done?'d':''}" data-c="${c}">${c<p.done?'✓':''}</i>`).join('')}</div></div>`).join('')}`}).join('')}
+    ${wa?`<a class="btn ctwa" href="${wa}" target="_blank" rel="noopener">💬 ${tr('بعثلو بلي واجدة','Prévenir : c’est prêt')}</a>`:''}<button class="btn line full" data-act="open-bon" data-id="${id}">🧾 ${tr('رجوع للفاتورة','Retour à la facture')}</button></div>`:''}
+  <div class="ctsheet">
+   <div class="cthead"><div><div class="ctno">${tr('فاتورة رقم','Facture n°')} <bdi dir="ltr">${b.num||''}</bdi></div>
+     <div class="ctln big">${tr('الزبون','Client')}: ${esc(custName(b))}</div>${c.owner?`<div class="ctln">${tr('المسؤول','Responsable')}: ${esc(c.owner)}</div>`:''}${ph?`<div class="ctln">${tr('الهاتف','Tél')}: <bdi dir="ltr">${esc(ph)}</bdi></div>`:''}</div>
+     <div class="ctdt">${fdt(b.date,b.createdAt)}</div></div>
+   <div class="ctprog">${cutBar(s,true)}<div class="rowflex between"><b class="ctcount ${all?'ok':''}">✂️ ${tr('تقصّت','Découpé')} <bdi dir="ltr">${s.done}</bdi> ${tr('من','sur')} <bdi dir="ltr">${s.n}</bdi></b>${all?`<button class="ctmini" data-act="ct-reset" data-id="${id}">↩️ ${tr('رجّع الكل','Tout annuler')}</button>`:`<button class="ctmini" data-act="ct-all" data-id="${id}">✅ ${tr('كلّش تقصّ','Tout découpé')}</button>`}</div></div>
+   <table class="cttbl"><thead><tr><th class="n">#</th><th>${tr('النوع','Type')}</th><th class="dm">${tr('المقاس (سم)','Mesure (cm)')}</th><th class="q">${tr('العدد','Qté')}</th><th class="tk">✂️</th></tr></thead><tbody>
+   ${R.map((p,k)=>`<tr class="ctr ${p.done>=p.qty?'done':''} ${p.key===nextKey?'next':''}" data-act="ct-tk" data-id="${id}" data-k="${esc(p.key)}" role="button">
+     <td class="n">${k+1}</td><td class="ty">${esc(p.type)}${p.key===nextKey?`<span class="ctnx">${tr('التالية','Suivante')}</span>`:''}</td><td class="dm"><bdi dir="ltr">${cf1(p.w)} × ${cf1(p.h)}</bdi></td><td class="q">${p.qty}</td>
+     <td class="tk"><span class="cttk">${Array.from({length:p.qty},(_,x)=>`<i class="${x<p.done?'d':''}" data-c="${x}">${x<p.done?'✓':''}</i>`).join('')}</span></td></tr>`).join('')}
+   </tbody></table>
+   <div class="ctfoot"><span>${tr('مجموع القطع','Nombre de pièces')}</span><b><bdi dir="ltr">${s.n}</bdi> ${tr('قطعة','pièce(s)')}</b></div>
+  </div>
   </div>`}
 {const _r=render33;render33=function(v){if(v==='cutp')return cutViewHTML();return _r(v)}}
 
 async function cutSave(id,b,cut){const s0=cutSt(b);b.cut=cut;const s=cutSt(b),fin=s.n>0&&s.done>=s.n;
   b.cutDoneAt=fin?(s0.done>=s0.n&&b.cutDoneAt?b.cutDoneAt:Date.now()):0;b.cutAt=Date.now();
-  if(fin&&s0.done<s0.n){ctJust=id;try{sound('paid')}catch(_){}try{navigator.vibrate&&navigator.vibrate([30,60,30])}catch(_){}}
+  if(fin&&s0.done<s0.n){ctJust=id;setTimeout(()=>{try{window.scrollTo({top:0,behavior:'smooth'})}catch(_){}},60);try{sound('paid')}catch(_){}try{navigator.vibrate&&navigator.vibrate([30,60,30])}catch(_){}}
   else{try{navigator.vibrate&&navigator.vibrate(15)}catch(_){}}
   render();
   try{await db.doc('bons/'+id).update({cut:b.cut,cutDoneAt:b.cutDoneAt,cutAt:b.cutAt,cutBy:curName()||''})}catch(e){toast(errMsg(e))}}
