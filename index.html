@@ -1032,6 +1032,19 @@ body.vrec .vxsheet.gem .vxmic{background:#e0362c;transform:scale(1.15)}
 .cttbl th.dm,.cttbl td.dm{width:1%;white-space:nowrap;text-align:center;padding-inline:10px}
 .cttbl th.q,.cttbl td.q{padding-inline:8px}
 @media (max-width:480px){.ctsheet{padding:14px 10px}.cttbl td{padding:11px 3px}.cttbl th{font-size:.85rem;padding:9px 3px}.ctr td.dm,.ctr td.q{font-size:1.15rem}.ctr td.ty{font-size:.95rem}.cttbl th.q,.cttbl td.q{width:30px}.cttbl th.tk,.cttbl td.tk{width:44px}.cttbl th.n,.cttbl td.n{width:20px}.ctr .cttk i{width:38px;height:38px}.ctno{font-size:1.3rem}}
+.ctr .ctnx{white-space:nowrap}
+.ctrw{position:relative;display:inline-flex}
+.ctplus{position:absolute;right:-21px;bottom:-5px;width:31px;height:31px;border-radius:50%;border:0;background:#fff;color:var(--ok);font-size:1.45rem;font-weight:700;line-height:1;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(16,28,46,.22);padding:0 0 2px}
+.ctplus:active{transform:scale(.92)}
+.ctcnt{display:flex;flex-direction:column;align-items:center;gap:9px}
+.ctring{width:52px;height:52px;border-radius:50%;background:conic-gradient(var(--ok) calc(var(--p)*1%),#cfd6e0 0);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.ctring b{width:41px;height:41px;border-radius:50%;background:var(--surface);display:flex;align-items:center;justify-content:center;font-size:.86rem;font-weight:800;color:var(--ink);letter-spacing:-.2px}
+.ctring.full b{background:var(--ok);color:#fff;font-size:1.3rem}
+.ctctl{display:flex;gap:4px;justify-content:center}
+.ctb{white-space:nowrap;min-height:30px;min-width:30px;padding:0 8px;border-radius:99px;border:1.5px solid #9aa6b6;background:var(--surface);color:var(--ink);font-weight:800;font-size:.85rem;line-height:1}
+.ctb.all{border-color:var(--ok);color:var(--ok)}
+.cttbl th.tk,.cttbl td.tk{width:104px}
+@media (max-width:480px){.cttbl th.tk,.cttbl td.tk{width:94px}.ctring{width:48px;height:48px}.ctring b{width:38px;height:38px;font-size:.8rem}.ctb{padding:0 6px;font-size:.8rem}}
 </style>
 </head>
 <body>
@@ -1086,7 +1099,7 @@ const num=v=>{const n=parseFloat(String(v??'').replace(/\s/g,'').replace(',','.'
 const loc=()=>isFr()?'fr-FR':'en-US';
 const grp=n=>{const r=Math.round(n);return(r<0?'-':'')+Math.abs(r).toLocaleString(loc()).replace(/ /g,' ')};
 const grpTxt=n=>Math.round(n).toLocaleString('en-US');
-const APP_VER=95; // نفس الرقم تاع VERSION في sw.js
+const APP_VER=96; // نفس الرقم تاع VERSION في sw.js
 const CUR=()=>tr('دج','DA');
 const DA=n=>`<bdi dir="ltr">${grp(n)}</bdi>&nbsp;${CUR()}`;
 const dec2=a=>(Math.round(a*100)/100).toLocaleString(loc(),{minimumFractionDigits:2,maximumFractionDigits:2});
@@ -6964,7 +6977,7 @@ function cutViewHTML(){const id=view.id,b=S.bons[id];if(!b)return `<div class="e
    <table class="cttbl"><thead><tr><th class="n">#</th><th>${tr('النوع','Type')}</th><th class="dm">${tr('المقاس (سم)','Mesure (cm)')}</th><th class="q">${tr('العدد','Qté')}</th><th class="tk">✂️</th></tr></thead><tbody>
    ${R.map((p,k)=>`<tr class="ctr ${p.done>=p.qty?'done':''} ${p.key===nextKey?'next':''}" data-act="ct-tk" data-id="${id}" data-k="${esc(p.key)}" role="button">
      <td class="n">${k+1}</td><td class="ty">${esc(p.type)}${p.key===nextKey?`<span class="ctnx">${tr('التالية','Suivante')}</span>`:''}</td><td class="dm"><bdi dir="ltr">${cf1(p.w)} × ${cf1(p.h)}</bdi></td><td class="q">${p.qty}</td>
-     <td class="tk"><span class="cttk">${Array.from({length:p.qty},(_,x)=>`<i class="${x<p.done?'d':''}" data-c="${x}">${x<p.done?'✓':''}</i>`).join('')}</span></td></tr>`).join('')}
+     <td class="tk">${cutTickHTML(id,p)}</td></tr>`).join('')}
    </tbody></table>
    <div class="ctfoot"><span>${tr('مجموع القطع','Nombre de pièces')}</span><b><bdi dir="ltr">${s.n}</bdi> ${tr('قطعة','pièce(s)')}</b></div>
   </div>
@@ -6981,7 +6994,7 @@ document.addEventListener('click',async e=>{const t=e.target.closest&&e.target.c
   const id=t.dataset.id,b=S.bons[id];if(!b)return;
   if(a==='ct-open')return go('cutp',{id});
   if(a==='ct-tk'){const p=cutPieces(b).find(x=>x.key===t.dataset.k);if(!p)return;const ci=e.target.closest('.cttk i');let d;
-    if(ci){const c=+ci.dataset.c;d=c<p.done?c:c+1}else d=p.done<p.qty?p.done+1:p.done-1;
+    const dd=t.dataset.d;if(dd==='-1')d=p.done-1;else if(dd==='all')d=p.qty;else if(p.qty===1)d=p.done?0:1;else d=Math.min(p.qty,p.done+1);if(d===p.done)return;
     return cutSave(id,b,{...(b.cut||{}),[p.key]:Math.max(0,Math.min(p.qty,d))})}
   if(a==='ct-all'){const s=cutSt(b);if(s.n-s.done>1&&!await ask({title:tr('كلّش تقصّ؟','Tout est découpé ?'),body:tr(`باقي ${s.n-s.done} قطع ما تعلّموش. نعلّمهم كامل ✅؟`,`${s.n-s.done} pièces non cochées. Tout cocher ?`),ok:tr('إيه، كلّش تقصّ','Oui, tout'),danger:false}))return;
     const c={};for(const p of cutPieces(b))c[p.key]=p.qty;return cutSave(id,b,c)}
@@ -6998,6 +7011,13 @@ document.addEventListener('visibilitychange',()=>{try{cutWake()}catch(_){}});
 
 /* فاتورتي: سطر القص · المعاينة تتجدد كي يتبدل القص */
 {const _k=bvKey;bvKey=function(id,b,mine){return _k(id,b,mine)+(mine?'|ct'+cutSt(b).done+'.'+(b.cutDoneAt||0)+'.'+(cutTracked(b)?1:0):'')}}
+
+
+/* v96: قطعة وحدة = دائرة · أكثر من قطعة = عدّاد 7/20 + «−» و«الكل» */
+function cutTickHTML(id,p){if(p.qty===1)return `<span class="cttk"><i class="${p.done?'d':''}">${p.done?'✓':''}</i></span>`;
+  const full=p.done>=p.qty,pct=Math.round(p.done/p.qty*100),k=esc(p.key);
+  return `<span class="ctcnt"><span class="ctrw"><span class="ctring ${full?'full':''}" style="--p:${pct}"><b>${full?'✓':`<bdi dir="ltr">${p.done}/${p.qty}</bdi>`}</b></span>${full?'':`<button type="button" class="ctplus" data-act="ct-tk" data-id="${id}" data-k="${k}" data-d="+1" aria-label="${tr('زيد وحدة','Ajouter une')}">+</button>`}</span>
+  <span class="ctctl">${p.done>0?`<button type="button" class="ctb" data-act="ct-tk" data-id="${id}" data-k="${k}" data-d="-1" aria-label="${tr('رجّع وحدة','Retirer une')}">−</button>`:''}${full?'':`<button type="button" class="ctb all" data-act="ct-tk" data-id="${id}" data-k="${k}" data-d="all">${tr('الكل','Tout')}</button>`}</span></span>`}
 
 function backupFile(){const data={app:'daftar-zujaj',version:2,exportedAt:new Date().toISOString(),docs:LocalDB.dump()};return new File([JSON.stringify(data)],`tumayd-backup-${today()}.json`,{type:'application/json'})}
 function downloadFile(f){const u=URL.createObjectURL(f);const a=document.createElement('a');a.href=u;a.download=f.name;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000)}
